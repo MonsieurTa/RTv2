@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/22 01:28:11 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/22 15:02:52 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,27 @@ typedef struct	s_mlx
 	t_img		img;
 }				t_mlx;
 
+typedef struct	s_comp
+{
+	t_vec3	pos;
+	t_vec3	dir;
+	t_vec3	up;
+	t_vec3	right;
+}				t_comp;
+
+typedef struct	s_ray
+{
+	t_vec3	pos;
+	t_vec3	dir;
+}				t_ray;
+
 typedef struct	s_cam
 {
 	t_vec3		pos;
 	t_vec3		dir;
 	t_vec3		up;
 	t_vec3		right;
-	t_vec3		ray;
+	t_ray		ray;
 	double		fov;
 }				t_cam;
 
@@ -81,7 +95,7 @@ typedef struct	s_info
 
 void			init_cam(t_cam *cam);
 void			set_view(t_info *info);
-void			look_at(t_cam *cam, t_vec3 from, t_vec3 to);
+t_comp			look_at(t_vec3 from, t_vec3 to);
 
 void			render(t_img *img, t_cam *cam, t_view *view);
 

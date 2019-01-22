@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 19:31:44 by wta               #+#    #+#             */
-/*   Updated: 2019/01/22 02:12:21 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/22 13:52:35 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,15 @@ void	init_cam(t_cam *cam)
 	cam->fov = M_PI / 2;
 }
 
-void	look_at(t_cam *cam, t_vec3 from, t_vec3 to)
+t_comp	look_at(t_vec3 from, t_vec3 to)
 {
 	t_vec3	tmp;
+	t_comp	comp;
 
-	cam->dir = vec3_normalize(vec3_sub(from, to));
+	comp.dir = vec3_normalize(vec3_sub(from, to));
 	tmp = (t_vec3){0., 1., 0.};
-	cam->right = vec3_normalize(vec3_cross(vec3_normalize(tmp), cam->dir));
-	cam->up = vec3_cross(cam->dir, cam->right);
-	cam->pos = from;
+	comp.right = vec3_normalize(vec3_cross(vec3_normalize(tmp), comp.right));
+	comp.up = vec3_cross(comp.dir, comp.right);
+	comp.pos = from;
+	return (comp);
 }
