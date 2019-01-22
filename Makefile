@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/01 02:51:44 by wta               #+#    #+#              #
-#    Updated: 2019/01/22 01:28:24 by wta              ###   ########.fr        #
+#    Updated: 2019/01/22 18:20:29 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ camera.c		\
 error.c			\
 event.c			\
 main.c			\
+quadratic.c		\
 raytracing.c	\
 view.c			\
 vectors.c		\

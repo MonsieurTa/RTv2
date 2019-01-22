@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 00:33:02 by wta               #+#    #+#             */
-/*   Updated: 2019/01/22 15:15:35 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/22 20:03:02 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,43 +21,34 @@ void		pxl_to_img(t_img *img, int x, int y, int color)
 
 #include <stdio.h>
 
-double	intersect_sphere(t_cam *cam)
+double	intersect_sphere(t_cam *cam, t_sphere sphere)
 {
-	t_vec3	x;
-	t_vec3	var;
-	t_vec3	det;
-	t_vec3	sphere;
-	double	radius;
+	t_vec3	moveto;
+	t_quad	quad;
 
-	sphere = (t_vec3){0., 2., 0.};
-	radius = 1.;
 	cam->ray.dir = vec3_normalize(cam->ray.dir);
-	x = vec3_sub(cam->ray.pos, sphere);
-	var.x = vec3_dot(cam->ray.dir, cam->ray.dir);
-	var.y = 2 * vec3_dot(cam->ray.dir, x);
-	var.z = vec3_dot(x, x) - (radius * radius);
-	det.x = var.y * var.y - 4 * var.x * var.z;
-	if (det.x > 0.)
-	{
-		det.y = (-var.y + sqrt(det.x)) / (2 * var.x);
-		det.z = (-var.y - sqrt(det.x)) / (2 * var.x);
-		if (det.y < det.z)
-			return (det.y);
-		return (det.z);
-	}
-	if (det.x == 0.)
-		return (-var.y / (2 * var.x));
-	return (-1.);
+	moveto = vec3_sub(cam->ray.pos, sphere.pos);
+	quad.a = vec3_dot(cam->ray.dir, cam->ray.dir);
+	quad.b = 2 * vec3_dot(cam->ray.dir, moveto);
+	quad.c = vec3_dot(moveto, moveto) - (sphere.radius * sphere.radius);
+	return (do_quad(quad));
 }
 
 int	cast_ray(t_vec3	*pos, t_cam *cam)
 {
+	double		dist;
+	t_ray		normal;
+	t_vec3		hit;
+	t_sphere	sphere = {{0.,0.,0.}, 1., 0xff0000};
+
 	cam->ray.dir = vec3_normalize(vec3_sub(*pos, cam->pos));
 	cam->ray.pos = cam->pos;
-	if (intersect_sphere(cam) > -1.)
+	if ((dist = intersect_sphere(cam, sphere)) > -1.)
+	{
+		hit = vec3_add(cam->pos, vec3_multf(cam->ray.dir, dist));
+		normal = vec3_normalize(vec3_sub(hit, sphere.pos));
 		return (0xffffff);
-//	if (intersect_plane(cam) != -1.)
-//		return (0xff0000);
+	}
 	return (0x0);
 }
 
@@ -69,8 +60,8 @@ void	render(t_img *img, t_cam *cam, t_view *view)
 	int		color;
 
 	indent = (t_vec3){view->width / SCREEN_W, view->height / SCREEN_H, 0.};
-	view_pos = (t_vec3){-view->width / 2.,
-		view->height / 2., -9.};
+	view_pos = (t_vec3){-view->width / 2. + indent.x / 2,
+		view->height / 2. - indent.y / 2, -9.};
 	pxl_pos.y = -1;
 	while (++pxl_pos.y < SCREEN_H)
 	{
