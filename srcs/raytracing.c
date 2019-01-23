@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 00:33:02 by wta               #+#    #+#             */
-/*   Updated: 2019/01/23 17:39:40 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/23 23:07:14 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void		pxl_to_img(t_img *img, int x, int y, int color)
 
 #include <stdio.h>
 
-double	intersect_sphere(t_cam *cam, t_sphere sphere)
+double	intersect_sphere(t_cam *cam, t_obj sphere)
 {
 	t_vec3	moveto;
 	t_quad	quad;
@@ -47,55 +47,78 @@ int	get_color(t_color color, double coef)
 	return (final_color);
 }
 
-int	cast_ray(t_vec3	*pos, t_cam *cam)
+double	compute_lights(t_cam *cam, t_lst *lights, t_obj *obj, t_mat *mat)
 {
-	double		dist;
-	double		angle;
-	t_vec3		light = {-5., 0., -5.};
-	t_vec3		light_dir;
-	t_vec3		normal;
-	t_vec3		hit;
-	t_sphere	sphere = {{0.,3.,0.}, 1., {255, 0, 0}};
-	int			color;
+	t_vec3	hit;
+	t_vec3	light_dir;
+	double	dot;
+	double	i;
 
-	cam->ray.dir = vec3_normalize(vec3_sub(*pos, cam->pos));
-	cam->ray.pos = cam->pos;
-	if ((dist = intersect_sphere(cam, sphere)) > -1.)
+	i = 0.;
+	lights->node = lights->head;
+	while (lights->node != NULL)
 	{
-		hit = vec3_add(cam->pos, vec3_multf(cam->ray.dir, dist));
-		normal = vec3_normalize(vec3_sub(hit, sphere.pos));
-		light_dir = vec3_normalize(vec3_sub(light, hit));
-		angle = (vec3_dot(light_dir, normal)) / (vec3_norm(light_dir) * vec3_norm(normal));
-		if (angle < 0.)
-			return(0x0);
-		//angle = acos(angle);
-		color = get_color(sphere.color, 1 * vec3_dot(normal, light_dir));
-		return (color);
+		hit = vec3_add(cam->pos, vec3_multf(cam->ray.dir, mat->t));
+		mat->normal = vec3_normalize(vec3_sub(hit, obj->pos));
+		light_dir = vec3_normalize(vec3_sub(lights->node->obj.pos, hit));
+		dot = vec3_dot(mat->normal, light_dir);
+		if (dot > 0.)
+			i += lights->node->obj.intensity * dot / vec3_norm(mat->normal) * vec3_norm(light_dir);
+		lights->node = lights->node->next;
 	}
-	return (0x282828);
+	return (i);
 }
 
-void	render(t_img *img, t_cam *cam, t_view *view)
+int	cast_ray(t_vec3	*pos, t_scene *scene, t_obj *obj, t_mat *mat)
+{
+	double		coef;
+
+	scene->cam.ray.dir = vec3_normalize(vec3_sub(*pos, scene->cam.pos));
+	scene->cam.ray.pos = scene->cam.pos;
+	mat->color = 0x282828;
+	if ((mat->t = intersect_sphere(&scene->cam, *obj)) >= 0. && mat->t < mat->tmax)
+	{
+		coef = compute_lights(&scene->cam, &scene->lights, obj, mat);
+		mat->color = get_color(obj->color, 1. * coef);
+		mat->tmax = mat->t;
+	}
+	return (mat->t >= 0.);
+}
+
+void	raytracing(t_vec3 *pxl_pos, t_mlx *mlx, t_scene *scene)
+{
+	t_mat	mat;
+
+	mat.tmax = 2000.;
+	scene->objs.node = scene->objs.head;
+	while (scene->objs.node != NULL)
+	{
+		if (cast_ray(&scene->view.pos, scene, &scene->objs.node->obj, &mat))
+			pxl_to_img(&mlx->img, pxl_pos->x, pxl_pos->y, mat.color);
+		scene->objs.node = scene->objs.node->next;
+	}
+	if (mat.tmax == 2000.)
+		pxl_to_img(&mlx->img, pxl_pos->x, pxl_pos->y, mat.color);
+}
+
+void	render(t_mlx *mlx, t_scene *scene)
 {
 	t_vec3	pxl_pos;
-	t_vec3	view_pos;
 	t_vec3	indent;
-	int		color;
 
-	indent = (t_vec3){view->width / SCREEN_W, view->height / SCREEN_H, 0.};
-	view_pos = (t_vec3){-view->width / 2. + indent.x / 2,
-		view->height / 2. - indent.y / 2, -9.};
+	indent = (t_vec3){scene->view.width / SCREEN_W, scene->view.height / SCREEN_H, 0.};
+	scene->view.pos = (t_vec3){-scene->view.width / 2. + indent.x / 2,
+		scene->view.height / 2. - indent.y / 2, -9.};
 	pxl_pos.y = -1;
 	while (++pxl_pos.y < SCREEN_H)
 	{
 		pxl_pos.x = -1;
 		while (++pxl_pos.x < SCREEN_W)
 		{
-			color = cast_ray(&view_pos, cam);
-			pxl_to_img(img, pxl_pos.x, pxl_pos.y, color);
-			view_pos.x += indent.x;
+			raytracing(&pxl_pos, mlx, scene);
+			scene->view.pos.x += indent.x;
 		}
-		view_pos.x = -view->width / 2.;
-		view_pos.y -= indent.y;
+		scene->view.pos.x = -scene->view.width / 2.;
+		scene->view.pos.y -= indent.y;
 	}
 }

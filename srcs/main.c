@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/01/22 01:27:54 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/23 22:39:00 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,27 +29,33 @@ int	init_mlx(t_mlx *mlx)
 	return (1);
 }
 
-void	mlx_flow(t_info *info)
+void	mlx_flow(t_env *env)
 {
-	if ((init_mlx(&info->mlx)) == 0)
+	if ((init_mlx(&env->mlx)) == 0)
 		err_handler(MLX_ERR);
-	render(&info->mlx.img, &info->cam, &info->view);
-	mlx_put_image_to_window(info->mlx.mlx_ptr, info->mlx.win_ptr,
-							info->mlx.img.img_ptr, 0, 0);
-	mlx_hook(info->mlx.win_ptr, 2, 0, key_pressed, info);
-	mlx_hook(info->mlx.win_ptr, 3, 0, key_released, info);
-	mlx_hook(info->mlx.win_ptr, 17, 0, close_win, NULL);
-	mlx_loop(info->mlx.mlx_ptr);
+	render(&env->mlx, &env->scene);
+	mlx_put_image_to_window(env->mlx.mlx_ptr, env->mlx.win_ptr,
+							env->mlx.img.img_ptr, 0, 0);
+	mlx_hook(env->mlx.win_ptr, 2, 0, key_pressed, env);
+	mlx_hook(env->mlx.win_ptr, 3, 0, key_released, env);
+	mlx_hook(env->mlx.win_ptr, 17, 0, close_win, NULL);
+	mlx_loop(env->mlx.mlx_ptr);
 }
 
 #include <stdio.h>
 
 int	main(void)
 {
-	t_info	info;
+	t_env	env;
 
-	init_cam(&info.cam);
-	set_view(&info);
-	mlx_flow(&info);
+	init_cam(&env.scene.cam);
+	init_lst(&env.scene.objs);
+	set_view(&env);
+	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){0., 0., 0.}, 1., (t_color){255,0,0})));
+	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){5., 0., 0.}, 2., (t_color){0,255,0})));
+	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){-5., 0., 0.}, 2., (t_color){0,0,255})));
+	pushback(&env.scene.lights, newnode(new_light((t_vec3){-10., 10., -10.}, 0.2, (t_color){0,0,255})));
+	pushback(&env.scene.lights, newnode(new_light((t_vec3){10., 10., -10.}, 0.4, (t_color){0,0,255})));
+	mlx_flow(&env);
 	return (0);
 }

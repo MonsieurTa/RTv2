@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/23 17:13:00 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/23 22:55:54 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,106 +38,137 @@
 
 typedef unsigned char	t_uchar;
 
-typedef struct	s_img
+typedef struct		s_img
 {
-	void		*img_ptr;
-	int			*img_str;
-	int			width;
-	int			height;
-	int			bpp;
-	int			sizel;
-	int			endian;
-}				t_img;
+	void			*img_ptr;
+	int				*img_str;
+	int				width;
+	int				height;
+	int				bpp;
+	int				sizel;
+	int				endian;
+}					t_img;
 
-typedef struct	s_mlx
+typedef struct		s_mlx
 {
-	void		*mlx_ptr;
-	void		*win_ptr;
-	t_img		img;
-}				t_mlx;
+	void			*mlx_ptr;
+	void			*win_ptr;
+	t_img			img;
+}					t_mlx;
 
-typedef struct	s_colpr
+typedef struct		s_color
 {
-	t_uchar		r;
-	t_uchar		g;
-	t_uchar		b;
-}				t_color;
+	t_uchar			r;
+	t_uchar			g;
+	t_uchar			b;
+}					t_color;
 
-typedef struct	s_comp
+typedef struct		s_comp
 {
-	t_vec3		pos;
-	t_vec3		dir;
-	t_vec3		up;
-	t_vec3		right;
-}				t_comp;
+	t_vec3			pos;
+	t_vec3			dir;
+	t_vec3			up;
+	t_vec3			right;
+}					t_comp;
 
-typedef struct	s_sphere
+typedef struct		s_ray
 {
-	t_vec3		pos;
-	double		radius;
-	t_color		color;
-}				t_sphere;
+	t_vec3			pos;
+	t_vec3			dir;
+}					t_ray;
 
-typedef struct	s_ray
+typedef struct		s_mat
 {
-	t_vec3		pos;
-	t_vec3		dir;
-}				t_ray;
+	t_vec3			normal;
+	double			t;
+	double			tmax;
+	int				color;
+	int				reflect;
+}					t_mat;
 
-typedef struct	s_mat
+typedef struct		s_cam
 {
-	t_vec3		normal;
-	int			color;
-	int			reflect;
-}				t_mat;
+	t_vec3			pos;
+	t_vec3			dir;
+	t_vec3			up;
+	t_vec3			right;
+	t_ray			ray;
+	double			fov;
+}					t_cam;
 
-typedef struct	s_cam
+typedef struct		s_quad
 {
-	t_vec3		pos;
-	t_vec3		dir;
-	t_vec3		up;
-	t_vec3		right;
-	t_ray		ray;
-	double		fov;
-}				t_cam;
+	double			a;
+	double			b;
+	double			c;
+	double			r0;
+	double			r1;
+	double			det;
+}					t_quad;
 
-typedef struct	s_quad
+typedef struct		s_view
 {
-	double		a;
-	double		b;
-	double		c;
-	double		r0;
-	double		r1;
-	double		det;
-}				t_quad;
+	t_vec3			pos;
+	double			width;
+	double			height;
+	double			dist;
+}					t_view;
 
-typedef struct	s_view
+typedef struct		s_obj
 {
-	double		width;
-	double		height;
-	double		dist;
-}				t_view;
+	char			type;
+	t_vec3			pos;
+	t_color			color;
+	double			radius;
+	double			intensity;
+}					t_obj;
 
-typedef struct	s_info
+typedef	struct		s_node
 {
-	t_mlx		mlx;
-	t_cam		cam;
-	t_view		view;
-	int			key_pressed;
-}				t_info;
+	struct s_node	*next;
+	t_obj			obj;
+}					t_node;
 
-void			init_cam(t_cam *cam);
-void			set_view(t_info *info);
-t_comp			look_at(t_vec3 from, t_vec3 to);
+typedef struct		s_lst
+{
+	t_node			*head;
+	t_node			*tail;
+	t_node			*node;
+}					t_lst;
 
-double			do_quad(t_quad quad);
+typedef struct		s_scene
+{
+	t_cam			cam;
+	t_view			view;
+	t_lst			objs;
+	t_lst			lights;
+}					t_scene;
 
-void			render(t_img *img, t_cam *cam, t_view *view);
+typedef struct		s_env
+{
+	t_mlx			mlx;
+	t_scene			scene;
+	int				key_pressed;
+}					t_env;
 
-int				key_pressed(int key, void *param);
-int				key_released(int key, void *param);
-int				close_win(void);
+t_obj				new_light(t_vec3 pos, double intensity, t_color color);
+t_obj				new_sphere(t_vec3 pos, double radius, t_color color);
+void				pushback(t_lst *lst, t_node *node);
+void				init_lst(t_lst *lst);
+t_node				*newnode(t_obj obj);
 
-void			err_handler(int err_id);
+void				init_cam(t_cam *cam);
+void				set_view(t_env *env);
+t_comp				look_at(t_vec3 from, t_vec3 to);
+
+double				do_quad(t_quad quad);
+
+void				render(t_mlx *mlx, t_scene *scene);
+
+int					key_pressed(int key, void *param);
+int					key_released(int key, void *param);
+int					close_win(void);
+
+void				err_handler(int err_id);
 
 #endif

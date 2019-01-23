@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   view.c                                             :+:      :+:    :+:   */
+/*   obj.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/21 22:02:07 by wta               #+#    #+#             */
-/*   Updated: 2019/01/23 20:17:28 by wta              ###   ########.fr       */
+/*   Created: 2019/01/23 20:37:04 by wta               #+#    #+#             */
+/*   Updated: 2019/01/23 22:13:16 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
-#include <stdio.h>
-#include "vectors.h"
 #include "rtv1.h"
 
-void	set_view(t_env *env)
+t_obj	new_sphere(t_vec3 pos, double radius, t_color color)
 {
-	double	tan_half_angle;
+	t_obj	sphere;
 
-	tan_half_angle = tan(env->scene.cam.fov / 2);
-	env->scene.view.width = tan_half_angle * 2;
-	env->scene.view.height = SCREEN_H / (SCREEN_W / env->scene.view.width);
-	env->scene.view.dist = 1.;
+	sphere.type = 1;
+	sphere.pos = pos;
+	sphere.radius = radius;
+	sphere.color = color;
+	return (sphere);
+}
+
+t_obj	new_light(t_vec3 pos, double intensity, t_color color)
+{
+	t_obj	light;
+
+	light.type = 0;
+	light.pos = pos;
+	light.intensity = intensity;
+	light.color = color;
+	return (light);
 }
