@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 00:33:02 by wta               #+#    #+#             */
-/*   Updated: 2019/01/22 20:03:02 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/23 17:39:40 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,29 @@ double	intersect_sphere(t_cam *cam, t_sphere sphere)
 	return (do_quad(quad));
 }
 
+int	get_color(t_color color, double coef)
+{
+	int		final_color;
+	t_uchar	*idx;
+
+	final_color = 0;
+	idx = (t_uchar*)&final_color;
+	idx[0] = color.b * coef;
+	idx[1] = color.g * coef;
+	idx[2] = color.r * coef;
+	return (final_color);
+}
+
 int	cast_ray(t_vec3	*pos, t_cam *cam)
 {
 	double		dist;
-	t_ray		normal;
+	double		angle;
+	t_vec3		light = {-5., 0., -5.};
+	t_vec3		light_dir;
+	t_vec3		normal;
 	t_vec3		hit;
-	t_sphere	sphere = {{0.,0.,0.}, 1., 0xff0000};
+	t_sphere	sphere = {{0.,3.,0.}, 1., {255, 0, 0}};
+	int			color;
 
 	cam->ray.dir = vec3_normalize(vec3_sub(*pos, cam->pos));
 	cam->ray.pos = cam->pos;
@@ -47,9 +64,15 @@ int	cast_ray(t_vec3	*pos, t_cam *cam)
 	{
 		hit = vec3_add(cam->pos, vec3_multf(cam->ray.dir, dist));
 		normal = vec3_normalize(vec3_sub(hit, sphere.pos));
-		return (0xffffff);
+		light_dir = vec3_normalize(vec3_sub(light, hit));
+		angle = (vec3_dot(light_dir, normal)) / (vec3_norm(light_dir) * vec3_norm(normal));
+		if (angle < 0.)
+			return(0x0);
+		//angle = acos(angle);
+		color = get_color(sphere.color, 1 * vec3_dot(normal, light_dir));
+		return (color);
 	}
-	return (0x0);
+	return (0x282828);
 }
 
 void	render(t_img *img, t_cam *cam, t_view *view)

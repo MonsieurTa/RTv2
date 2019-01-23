@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/22 20:14:04 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/23 17:13:00 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@
 
 #include "vectors.h"
 
+typedef unsigned char	t_uchar;
+
 typedef struct	s_img
 {
 	void		*img_ptr;
@@ -54,6 +56,13 @@ typedef struct	s_mlx
 	t_img		img;
 }				t_mlx;
 
+typedef struct	s_colpr
+{
+	t_uchar		r;
+	t_uchar		g;
+	t_uchar		b;
+}				t_color;
+
 typedef struct	s_comp
 {
 	t_vec3		pos;
@@ -66,7 +75,7 @@ typedef struct	s_sphere
 {
 	t_vec3		pos;
 	double		radius;
-	int			color;
+	t_color		color;
 }				t_sphere;
 
 typedef struct	s_ray
@@ -74,6 +83,13 @@ typedef struct	s_ray
 	t_vec3		pos;
 	t_vec3		dir;
 }				t_ray;
+
+typedef struct	s_mat
+{
+	t_vec3		normal;
+	int			color;
+	int			reflect;
+}				t_mat;
 
 typedef struct	s_cam
 {
