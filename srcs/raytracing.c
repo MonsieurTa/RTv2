@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 00:33:02 by wta               #+#    #+#             */
-/*   Updated: 2019/01/23 23:07:14 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/24 00:31:45 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@ void		pxl_to_img(t_img *img, int x, int y, int color)
 
 #include <stdio.h>
 
-double	intersect_sphere(t_cam *cam, t_obj sphere)
+double	intersect_sphere(t_ray *ray, t_obj sphere)
 {
 	t_vec3	moveto;
 	t_quad	quad;
 
-	cam->ray.dir = vec3_normalize(cam->ray.dir);
-	moveto = vec3_sub(cam->ray.pos, sphere.pos);
-	quad.a = vec3_dot(cam->ray.dir, cam->ray.dir);
-	quad.b = 2 * vec3_dot(cam->ray.dir, moveto);
+	ray->dir = vec3_normalize(ray->dir);
+	moveto = vec3_sub(ray->pos, sphere.pos);
+	quad.a = vec3_dot(ray->dir, ray->dir);
+	quad.b = 2 * vec3_dot(ray->dir, moveto);
 	quad.c = vec3_dot(moveto, moveto) - (sphere.radius * sphere.radius);
 	return (do_quad(quad));
 }
@@ -47,10 +47,24 @@ int	get_color(t_color color, double coef)
 	return (final_color);
 }
 
-double	compute_lights(t_cam *cam, t_lst *lights, t_obj *obj, t_mat *mat)
+int		cast_shadow(t_vec3 *l_dir, t_vec3 *hit, t_lst *obj)
 {
-	t_vec3	hit;
-	t_vec3	light_dir;
+	t_ray	shadow;
+
+	obj->node = obj->head;
+	shadow = (t_ray){*hit, *l_dir};
+	while (obj->node != NULL)
+	{
+		if (intersect_sphere(&shadow, obj->node->obj) >= 0.)
+			return (1);
+		obj->node = obj->node->next;
+	}
+	return (0);
+}
+
+double	compute_lights(t_scene *scene, t_lst *lights, t_obj *obj)
+{
+	t_vec3	l_dir;
 	double	dot;
 	double	i;
 
@@ -58,47 +72,57 @@ double	compute_lights(t_cam *cam, t_lst *lights, t_obj *obj, t_mat *mat)
 	lights->node = lights->head;
 	while (lights->node != NULL)
 	{
-		hit = vec3_add(cam->pos, vec3_multf(cam->ray.dir, mat->t));
-		mat->normal = vec3_normalize(vec3_sub(hit, obj->pos));
-		light_dir = vec3_normalize(vec3_sub(lights->node->obj.pos, hit));
-		dot = vec3_dot(mat->normal, light_dir);
-		if (dot > 0.)
-			i += lights->node->obj.intensity * dot / vec3_norm(mat->normal) * vec3_norm(light_dir);
+		if (lights->node->obj.type == DST_LIGHT)
+			i += lights->node->obj.intensity;
+		else
+		{
+			scene->mat.hit = vec3_add(scene->cam.pos, vec3_multf(scene->cam.ray.dir, scene->mat.t));
+			scene->mat.n = vec3_normalize(vec3_sub(scene->mat.hit, obj->pos));
+			l_dir = vec3_normalize(vec3_sub(lights->node->obj.pos, scene->mat.hit));
+			if (cast_shadow(&l_dir, &scene->mat.hit, &scene->objs) != 1)
+			{
+				dot = vec3_dot(scene->mat.n, l_dir);
+				if (dot > 0.)
+					i += lights->node->obj.intensity * dot / vec3_norm(scene->mat.n)
+						* vec3_norm(l_dir);
+			}
+		}
 		lights->node = lights->node->next;
 	}
 	return (i);
 }
 
-int	cast_ray(t_vec3	*pos, t_scene *scene, t_obj *obj, t_mat *mat)
+int	cast_ray(t_vec3	*pos, t_scene *scene, t_obj *obj)
 {
 	double		coef;
 
 	scene->cam.ray.dir = vec3_normalize(vec3_sub(*pos, scene->cam.pos));
 	scene->cam.ray.pos = scene->cam.pos;
-	mat->color = 0x282828;
-	if ((mat->t = intersect_sphere(&scene->cam, *obj)) >= 0. && mat->t < mat->tmax)
+	scene->mat.color = 0x282828;
+	if ((scene->mat.t = intersect_sphere(&scene->cam.ray, *obj)) >= 0.
+			&& scene->mat.t < scene->mat.tmax)
 	{
-		coef = compute_lights(&scene->cam, &scene->lights, obj, mat);
-		mat->color = get_color(obj->color, 1. * coef);
-		mat->tmax = mat->t;
+		coef = compute_lights(scene, &scene->lights, obj);
+		scene->mat.color = get_color(obj->color, 1. * coef);
+		scene->mat.tmax = scene->mat.t;
 	}
-	return (mat->t >= 0.);
+	return (scene->mat.t >= 0.);
 }
 
 void	raytracing(t_vec3 *pxl_pos, t_mlx *mlx, t_scene *scene)
 {
-	t_mat	mat;
+	t_node	*node;
 
-	mat.tmax = 2000.;
-	scene->objs.node = scene->objs.head;
-	while (scene->objs.node != NULL)
+	scene->mat.tmax = 2000.;
+	node = scene->objs.head;
+	while (node != NULL)
 	{
-		if (cast_ray(&scene->view.pos, scene, &scene->objs.node->obj, &mat))
-			pxl_to_img(&mlx->img, pxl_pos->x, pxl_pos->y, mat.color);
-		scene->objs.node = scene->objs.node->next;
+		if (cast_ray(&scene->view.pos, scene, &node->obj))
+			pxl_to_img(&mlx->img, pxl_pos->x, pxl_pos->y, scene->mat.color);
+		node = node->next;
 	}
-	if (mat.tmax == 2000.)
-		pxl_to_img(&mlx->img, pxl_pos->x, pxl_pos->y, mat.color);
+	if (scene->mat.tmax == 2000.)
+		pxl_to_img(&mlx->img, pxl_pos->x, pxl_pos->y, scene->mat.color);
 }
 
 void	render(t_mlx *mlx, t_scene *scene)

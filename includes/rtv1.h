@@ -6,33 +6,38 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/23 22:55:54 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/24 01:00:10 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
 
-# define RD_ERR		2
-# define BAD_FMT	3
-# define MALLOC_ERR	4
-# define GNL_ERR	5
-# define READ_ERR	6
-# define MLX_ERR	7
-# define SCREEN_W	1200
-# define SCREEN_H	720
-# define K_LEFT		123
-# define K_UP		126
-# define K_RIGHT	124
-# define K_DOWN		125
-# define K_A		0
-# define K_D		2
-# define K_SHIFT	257
-# define K_PLUS		69
-# define K_MINUS	78
-# define NUM_ZERO	82
-# define OPT_FLOOR	83
-# define ESC		53
+# define RD_ERR			2
+# define BAD_FMT		3
+# define MALLOC_ERR		4
+# define GNL_ERR		5
+# define READ_ERR		6
+# define MLX_ERR		7
+# define SCREEN_W		1200
+# define SCREEN_H		720
+# define K_LEFT			123
+# define K_UP			126
+# define K_RIGHT		124
+# define K_DOWN			125
+# define K_A			0
+# define K_D			2
+# define K_SHIFT		257
+# define K_PLUS			69
+# define K_MINUS		78
+# define NUM_ZERO		82
+# define OPT_FLOOR		83
+# define ESC			53
+# define DST_LIGHT		0
+# define SPHERE_LIGHT	1
+# define DIR_LIGHT		2
+# define SPHERE			3
+# define PLANE			4
 
 #include "vectors.h"
 
@@ -79,7 +84,8 @@ typedef struct		s_ray
 
 typedef struct		s_mat
 {
-	t_vec3			normal;
+	t_vec3			n;
+	t_vec3			hit;
 	double			t;
 	double			tmax;
 	int				color;
@@ -142,6 +148,7 @@ typedef struct		s_scene
 	t_view			view;
 	t_lst			objs;
 	t_lst			lights;
+	t_mat			mat;
 }					t_scene;
 
 typedef struct		s_env
@@ -151,7 +158,7 @@ typedef struct		s_env
 	int				key_pressed;
 }					t_env;
 
-t_obj				new_light(t_vec3 pos, double intensity, t_color color);
+t_obj				new_light(t_vec3 pos, double intensity, int type, t_color color);
 t_obj				new_sphere(t_vec3 pos, double radius, t_color color);
 void				pushback(t_lst *lst, t_node *node);
 void				init_lst(t_lst *lst);

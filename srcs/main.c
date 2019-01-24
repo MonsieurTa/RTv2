@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/01/23 22:39:00 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/24 00:46:14 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,12 @@ int	main(void)
 	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){0., 0., 0.}, 1., (t_color){255,0,0})));
 	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){5., 0., 0.}, 2., (t_color){0,255,0})));
 	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){-5., 0., 0.}, 2., (t_color){0,0,255})));
-	pushback(&env.scene.lights, newnode(new_light((t_vec3){-10., 10., -10.}, 0.2, (t_color){0,0,255})));
-	pushback(&env.scene.lights, newnode(new_light((t_vec3){10., 10., -10.}, 0.4, (t_color){0,0,255})));
+	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){1., 3., -3.}, 1., (t_color){0,120,255})));
+	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){1., 1., -3.}, 1., (t_color){34,140,30})));
+	pushback(&env.scene.objs, newnode(new_sphere((t_vec3){5., 3., -2.}, 1., (t_color){134,12,40})));
+	pushback(&env.scene.lights, newnode(new_light((t_vec3){-10., 10., -10.}, 0.2, DST_LIGHT, (t_color){0,0,255})));
+	pushback(&env.scene.lights, newnode(new_light((t_vec3){10., 10., -10.}, 0.2, SPHERE_LIGHT, (t_color){0,0,255})));
+	pushback(&env.scene.lights, newnode(new_light((t_vec3){-10., 10., -10.}, 0.2, SPHERE_LIGHT, (t_color){0,0,255})));
 	mlx_flow(&env);
 	return (0);
 }
