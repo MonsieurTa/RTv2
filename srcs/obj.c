@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 20:37:04 by wta               #+#    #+#             */
-/*   Updated: 2019/01/24 01:01:19 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/24 01:19:08 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ t_obj	new_sphere(t_vec3 pos, double radius, t_color color)
 	return (sphere);
 }
 
-t_obj	new_plane(t_vec3 pos, t_color color)
+t_obj	new_plane(t_vec3 pos, t_vec3 normal, t_color color)
 {
 	t_obj	plane;
 
 	plane.type = PLANE;
+	plane.normal = normal;
+	plane.pos = pos;
 	plane.color = color;
 	return (plane);
 }

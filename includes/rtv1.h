@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/24 01:00:10 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/24 01:36:24 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ typedef struct		s_obj
 {
 	char			type;
 	t_vec3			pos;
+	t_vec3			normal;
 	t_color			color;
 	double			radius;
 	double			intensity;
@@ -160,6 +161,7 @@ typedef struct		s_env
 
 t_obj				new_light(t_vec3 pos, double intensity, int type, t_color color);
 t_obj				new_sphere(t_vec3 pos, double radius, t_color color);
+t_obj				new_plane(t_vec3 pos, t_vec3 normal, t_color color);
 void				pushback(t_lst *lst, t_node *node);
 void				init_lst(t_lst *lst);
 t_node				*newnode(t_obj obj);

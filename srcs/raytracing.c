@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 00:33:02 by wta               #+#    #+#             */
-/*   Updated: 2019/01/24 00:31:45 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/24 03:51:51 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,23 @@ double	intersect_sphere(t_ray *ray, t_obj sphere)
 	return (do_quad(quad));
 }
 
+double	intersect_plane(t_ray *ray, t_obj plane)
+{
+	t_vec3	moveto;
+	double	denom;
+	double	dist;
+
+	ray->dir = vec3_normalize(ray->dir);
+	moveto = vec3_sub(ray->pos, plane.normal);
+	denom = vec3_dot(ray->dir, plane.normal);
+	if (denom > 0.001)
+	{
+		dist = -vec3_dot(moveto, plane.normal) / denom;
+		return (dist >= 0. ? dist : -1);
+	}
+	return (-1);
+}
+
 int	get_color(t_color color, double coef)
 {
 	int		final_color;
@@ -55,7 +72,11 @@ int		cast_shadow(t_vec3 *l_dir, t_vec3 *hit, t_lst *obj)
 	shadow = (t_ray){*hit, *l_dir};
 	while (obj->node != NULL)
 	{
-		if (intersect_sphere(&shadow, obj->node->obj) >= 0.)
+		if (obj->node->obj.type == SPHERE &&
+			intersect_sphere(&shadow, obj->node->obj) >= 0.)
+			return (1);
+		if (obj->node->obj.type == PLANE &&
+			intersect_plane(&shadow, obj->node->obj) >= 0.)
 			return (1);
 		obj->node = obj->node->next;
 	}
@@ -89,7 +110,7 @@ double	compute_lights(t_scene *scene, t_lst *lights, t_obj *obj)
 		}
 		lights->node = lights->node->next;
 	}
-	return (i);
+	return (i > 1. ? 1. : i);
 }
 
 int	cast_ray(t_vec3	*pos, t_scene *scene, t_obj *obj)
@@ -99,11 +120,15 @@ int	cast_ray(t_vec3	*pos, t_scene *scene, t_obj *obj)
 	scene->cam.ray.dir = vec3_normalize(vec3_sub(*pos, scene->cam.pos));
 	scene->cam.ray.pos = scene->cam.pos;
 	scene->mat.color = 0x282828;
-	if ((scene->mat.t = intersect_sphere(&scene->cam.ray, *obj)) >= 0.
-			&& scene->mat.t < scene->mat.tmax)
+	if ((obj->type == SPHERE
+		&& (scene->mat.t = intersect_sphere(&scene->cam.ray, *obj)) >= 0.
+		&& scene->mat.t < scene->mat.tmax)
+		|| (obj->type == PLANE
+		&& (scene->mat.t = intersect_plane(&scene->cam.ray, *obj)) >= 0.
+		&& scene->mat.t < scene->mat.tmax))
 	{
 		coef = compute_lights(scene, &scene->lights, obj);
-		scene->mat.color = get_color(obj->color, 1. * coef);
+		scene->mat.color = get_color(obj->color, coef);
 		scene->mat.tmax = scene->mat.t;
 	}
 	return (scene->mat.t >= 0.);
