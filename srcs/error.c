@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:39:58 by wta               #+#    #+#             */
-/*   Updated: 2019/01/21 13:50:22 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/25 16:44:46 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	err_handler(int err_id)
 	ft_strcpy(buf, "-Wolf3D: ");
 	if (err_id == -1)
 		ft_strcat(buf, strerror(errno));
+	if (err_id == BAD_CMRDIR)
+		ft_strcat(buf, "Bad camera direction");
 	if (err_id == RD_ERR)
 		ft_strcat(buf, "Read error");
 	if (err_id == BAD_FMT || err_id == GNL_ERR)

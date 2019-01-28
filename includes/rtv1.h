@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/24 01:36:24 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/27 20:32:06 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define GNL_ERR		5
 # define READ_ERR		6
 # define MLX_ERR		7
+# define BAD_CMRDIR		8
 # define SCREEN_W		1200
 # define SCREEN_H		720
 # define K_LEFT			123
@@ -26,7 +27,11 @@
 # define K_RIGHT		124
 # define K_DOWN			125
 # define K_A			0
+# define K_S			1
 # define K_D			2
+# define K_Q			12
+# define K_W			13
+# define K_E			14
 # define K_SHIFT		257
 # define K_PLUS			69
 # define K_MINUS		78
@@ -39,6 +44,7 @@
 # define SPHERE			3
 # define PLANE			4
 
+#include "quaternions.h"
 #include "vectors.h"
 
 typedef unsigned char	t_uchar;
@@ -61,47 +67,6 @@ typedef struct		s_mlx
 	t_img			img;
 }					t_mlx;
 
-typedef struct		s_color
-{
-	t_uchar			r;
-	t_uchar			g;
-	t_uchar			b;
-}					t_color;
-
-typedef struct		s_comp
-{
-	t_vec3			pos;
-	t_vec3			dir;
-	t_vec3			up;
-	t_vec3			right;
-}					t_comp;
-
-typedef struct		s_ray
-{
-	t_vec3			pos;
-	t_vec3			dir;
-}					t_ray;
-
-typedef struct		s_mat
-{
-	t_vec3			n;
-	t_vec3			hit;
-	double			t;
-	double			tmax;
-	int				color;
-	int				reflect;
-}					t_mat;
-
-typedef struct		s_cam
-{
-	t_vec3			pos;
-	t_vec3			dir;
-	t_vec3			up;
-	t_vec3			right;
-	t_ray			ray;
-	double			fov;
-}					t_cam;
-
 typedef struct		s_quad
 {
 	double			a;
@@ -112,72 +77,57 @@ typedef struct		s_quad
 	double			det;
 }					t_quad;
 
-typedef struct		s_view
-{
-	t_vec3			pos;
-	double			width;
-	double			height;
-	double			dist;
-}					t_view;
-
-typedef struct		s_obj
-{
-	char			type;
-	t_vec3			pos;
-	t_vec3			normal;
-	t_color			color;
-	double			radius;
-	double			intensity;
-}					t_obj;
-
 typedef	struct		s_node
 {
 	struct s_node	*next;
-	t_obj			obj;
 }					t_node;
 
 typedef struct		s_lst
 {
 	t_node			*head;
 	t_node			*tail;
-	t_node			*node;
 }					t_lst;
 
-typedef struct		s_scene
+typedef struct		s_rot
 {
-	t_cam			cam;
-	t_view			view;
-	t_lst			objs;
-	t_lst			lights;
-	t_mat			mat;
-}					t_scene;
+	double			yaw;
+	double			pitch;
+	double			roll;
+}					t_rot;
+
+typedef struct		s_cam
+{
+	t_v3			pos;
+	double			theta;
+	double			phi;
+	double			r;
+	t_v3			dir;
+	t_v3			up;
+	t_v3			right;
+	double			x_rot;
+	double			y_rot;
+	double			z_rot;
+}					t_cam;
 
 typedef struct		s_env
 {
 	t_mlx			mlx;
-	t_scene			scene;
+	t_cam			cam;
 	int				key_pressed;
 }					t_env;
 
-t_obj				new_light(t_vec3 pos, double intensity, int type, t_color color);
-t_obj				new_sphere(t_vec3 pos, double radius, t_color color);
-t_obj				new_plane(t_vec3 pos, t_vec3 normal, t_color color);
-void				pushback(t_lst *lst, t_node *node);
-void				init_lst(t_lst *lst);
-t_node				*newnode(t_obj obj);
-
 void				init_cam(t_cam *cam);
-void				set_view(t_env *env);
-t_comp				look_at(t_vec3 from, t_vec3 to);
+void				compute_pos(t_cam *cam);
 
 double				do_quad(t_quad quad);
 
-void				render(t_mlx *mlx, t_scene *scene);
-
 int					key_pressed(int key, void *param);
 int					key_released(int key, void *param);
+int					apply_key(void *param);
 int					close_win(void);
 
 void				err_handler(int err_id);
+
+double				sqr(double value);
 
 #endif
