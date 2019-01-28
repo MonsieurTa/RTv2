@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   quaternions.c                                      :+:      :+:    :+:   */
+/*   qernions.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wta <wta@student.41.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 17:18:19 by wta               #+#    #+#             */
-/*   Updated: 2019/01/27 20:12:40 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/28 18:14:43 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "quaternions.h"
 
-t_quat	q_normalize(t_quat quat)
+t_q	q_normalize(t_q q)
 {
-	t_quat	normalized;
+	t_q	normalized;
 	double	magnitude;
 
-	normalized = quat;
-	magnitude = sqr(quat.w) + sqr(quat.x) + sqr(quat.y) + sqr(quat.z);
+	normalized = q;
+	magnitude = sqr(q.w) + sqr(q.x) + sqr(q.y) + sqr(q.z);
 	if (magnitude != 1.0)
 	{
 		magnitude = sqrt(magnitude);
@@ -31,9 +31,9 @@ t_quat	q_normalize(t_quat quat)
 	return (normalized);
 }
 
-t_quat	q_mult(t_quat q1, t_quat q2)
+t_q	q_mult(t_q q1, t_q q2)
 {
-	t_quat	new;
+	t_q	new;
 
 	new.w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
 	new.x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
@@ -42,9 +42,9 @@ t_quat	q_mult(t_quat q1, t_quat q2)
 	return (new);
 }
 
-t_quat	q_local_rot(t_v3 axis, double angle)
+t_q	q_local_rot(t_v3 axis, double angle)
 {
-	t_quat	new;
+	t_q	new;
 
 	new.w = cos(angle / 2);
 	new.x = axis.x * sin(angle / 2);
@@ -53,9 +53,9 @@ t_quat	q_local_rot(t_v3 axis, double angle)
 	return (new);
 }
 
-t_quat	q_conj(t_quat q)
+t_q	q_conj(t_q q)
 {
-	t_quat	new;
+	t_q	new;
 
 	new.w = q.w;
 	new.x = -q.x;
@@ -64,9 +64,9 @@ t_quat	q_conj(t_quat q)
 	return (new);
 }
 
-t_quat	v3_to_q(t_v3 v)
+t_q	v3_to_q(t_v3 v)
 {
-	t_quat	q;
+	t_q	q;
 
 	q.w = 0.;
 	q.x = v.x;
@@ -75,7 +75,7 @@ t_quat	v3_to_q(t_v3 v)
 	return (q);
 }
 
-t_v3	q_to_v3(t_quat q)
+t_v3	q_to_v3(t_q q)
 {
 	t_v3	v;
 

@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/01 02:51:44 by wta               #+#    #+#              #
-#    Updated: 2019/01/26 18:23:22 by wta              ###   ########.fr        #
+#    Updated: 2019/01/28 19:36:00 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,14 +35,19 @@ SRCS=			\
 camera.c		\
 error.c			\
 event.c			\
+list.c			\
 main.c			\
 quadratic.c		\
 quaternions.c	\
+lights.c		\
+raytracing.c	\
 utils.c			\
 vectors.c		\
 vectors_2.c
 HEADER		=	\
 rtv1.h			\
+quaternions.h	\
+utils.h			\
 vectors.h
 # RULES #
 all : $(NAME)

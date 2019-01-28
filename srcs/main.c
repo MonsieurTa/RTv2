@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/01/25 13:54:20 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/28 23:06:15 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ void	mlx_flow(t_env *env)
 	if ((init_mlx(&env->mlx)) == 0)
 		err_handler(MLX_ERR);
 	env->key_pressed = 0;
-	mlx_put_image_to_window(env->mlx.mlx_ptr, env->mlx.win_ptr,
-							env->mlx.img.img_ptr, 0, 0);
+	render(env);
+	mlx_put_image_to_window(env->mlx.mlx_ptr, env->mlx.win_ptr, 
+		env->mlx.img.img_ptr, 0, 0);
 	mlx_hook(env->mlx.win_ptr, 2, 0, key_pressed, env);
 	mlx_hook(env->mlx.win_ptr, 3, 0, key_released, env);
 	mlx_hook(env->mlx.win_ptr, 17, 0, close_win, NULL);
@@ -43,11 +44,21 @@ void	mlx_flow(t_env *env)
 	mlx_loop(env->mlx.mlx_ptr);
 }
 
+#include <stdio.h>
+
 int	main(void)
 {
 	t_env	env;
 
 	init_cam(&env.cam);
+	init_lst(&env.objs);
+	init_lst(&env.lights);
+
+	pushback(&env.objs, newnode(new_plane((t_v3){0., 0., -1.}, (t_v3){0.,0.,1.},
+		(t_v3){255, 0., 0.}, (t_q){50, 0.2, 0.4, 0.3})));
+//	pushback(&env.objs, newnode(new_sphere((t_v3){0., 0., 3.}, (t_v3){255.,0.,0.}, 2., (t_q){50., 0.2, 0.4, 0.3})));
+	pushback(&env.lights, newnode(new_light(SPHERE_LIGHT, (t_v3){0., 0., -1.},
+		(t_v3){255, 0., 0.}, 0.6)));
 	mlx_flow(&env);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/27 20:32:06 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/28 22:16:48 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,35 @@ typedef struct		s_quad
 	double			det;
 }					t_quad;
 
+/*
+**	t_v3	n : normal vector
+**
+**	Phong's components :
+**		- phong.w : shininess (alpha)
+**		- phong.x : ambiant intensity
+**		- phong.y : diffuse intensity
+**		- phong.z : specular intensity
+**		- alpha	  : shininess
+**
+**	Light's components :
+**		- i       : intensity
+*/
+
+typedef struct		s_obj
+{
+	char			type;
+	double			radius;
+	double			i;
+	t_v3			pos;
+	t_v3			n;
+	t_v3			color;
+	t_q				phong;
+}					t_obj;
+
 typedef	struct		s_node
 {
 	struct s_node	*next;
+	t_obj			obj;
 }					t_node;
 
 typedef struct		s_lst
@@ -88,15 +114,28 @@ typedef struct		s_lst
 	t_node			*tail;
 }					t_lst;
 
-typedef struct		s_rot
+/*
+**	View plane's components :
+**		- fov    : Field of view
+**		- width  : width of the view plane
+**		- height : height of the view plane
+**		- i      : scaled indents for x/y coordinates from screen to view plane
+*/
+
+typedef struct		s_view
 {
-	double			yaw;
-	double			pitch;
-	double			roll;
-}					t_rot;
+	double			fov;
+	double			width;
+	double			height;
+	double			half_w;
+	double			half_h;
+	t_v3			i;
+	t_v3			origin;
+}					t_view;
 
 typedef struct		s_cam
 {
+	t_view			view;
 	t_v3			pos;
 	double			theta;
 	double			phi;
@@ -109,17 +148,38 @@ typedef struct		s_cam
 	double			z_rot;
 }					t_cam;
 
+typedef struct		s_ray
+{
+	t_v3			pos;
+	t_v3			dir;
+}					t_ray;
+
 typedef struct		s_env
 {
 	t_mlx			mlx;
+	t_lst			lights;
+	t_lst			objs;
+	double			t;
+	double			tmax;
 	t_cam			cam;
+	t_ray			ray;
 	int				key_pressed;
 }					t_env;
 
 void				init_cam(t_cam *cam);
 void				compute_pos(t_cam *cam);
 
+t_obj				new_light(char type, t_v3 pos, t_v3 color, double i);
+t_obj				new_sphere(t_v3 pos, t_v3 color, double radius, t_q phong);
+t_obj				new_plane(t_v3 pos, t_v3 n, t_v3 color, t_q phong);
+
+t_node				*newnode(t_obj obj);
+void				init_lst(t_lst *lst);
+void				pushback(t_lst *lst, t_node *node);
+
 double				do_quad(t_quad quad);
+
+void				render(t_env *env);
 
 int					key_pressed(int key, void *param);
 int					key_released(int key, void *param);
@@ -127,7 +187,5 @@ int					apply_key(void *param);
 int					close_win(void);
 
 void				err_handler(int err_id);
-
-double				sqr(double value);
 
 #endif
