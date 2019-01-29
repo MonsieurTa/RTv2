@@ -6,19 +6,19 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 17:30:18 by wta               #+#    #+#             */
-/*   Updated: 2019/01/28 22:15:56 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/29 17:24:19 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-t_obj	new_light(char type, t_v3 pos, t_v3 color, double i)
+t_obj	new_light(char type, t_v3 pos, t_v3 color, t_v3 aux)
 {
 	t_obj	new;
 
 	new.type = type;
-	new.radius = 0.;
-	new.i = i;
+	new.radius = aux.x;
+	new.i = aux.y;
 	new.pos = pos;
 	new.color = color;
 	return (new);

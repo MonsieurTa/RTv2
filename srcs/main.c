@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/01/28 23:06:15 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/29 22:38:16 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	mlx_flow(t_env *env)
 	if ((init_mlx(&env->mlx)) == 0)
 		err_handler(MLX_ERR);
 	env->key_pressed = 0;
+	env->pxl = PIXEL;
 	render(env);
 	mlx_put_image_to_window(env->mlx.mlx_ptr, env->mlx.win_ptr, 
 		env->mlx.img.img_ptr, 0, 0);
@@ -55,10 +56,17 @@ int	main(void)
 	init_lst(&env.lights);
 
 	pushback(&env.objs, newnode(new_plane((t_v3){0., 0., -1.}, (t_v3){0.,0.,1.},
-		(t_v3){255, 0., 0.}, (t_q){50, 0.2, 0.4, 0.3})));
-//	pushback(&env.objs, newnode(new_sphere((t_v3){0., 0., 3.}, (t_v3){255.,0.,0.}, 2., (t_q){50., 0.2, 0.4, 0.3})));
-	pushback(&env.lights, newnode(new_light(SPHERE_LIGHT, (t_v3){0., 0., -1.},
-		(t_v3){255, 0., 0.}, 0.6)));
+		(t_v3){50, 34., 120.}, (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_plane((t_v3){0., 50., 0.}, (t_v3){0.,-1.,0.},
+		(t_v3){0, 0., 255.}, (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){0., 0., 5.}, (t_v3){255., 0., 0.},
+		1., (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){5., 0., 5.}, (t_v3){0., 255., 0.},
+		2., (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.lights, newnode(new_light(AMBT_LIGHT, (t_v3){0., 0., 0.},
+		(t_v3){255, 255., 255.}, (t_v3){0., 0.2, 0.})));
+	pushback(&env.lights, newnode(new_light(SPHERE_LIGHT, (t_v3){0., -10., 0.},
+		(t_v3){255, 255., 255.}, (t_v3){0., 0.6, 0.})));
 	mlx_flow(&env);
 	return (0);
 }
