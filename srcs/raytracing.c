@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/01/29 22:50:37 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/30 18:05:56 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,16 +101,18 @@ int		cast_shadow(t_v3 *l_dir, t_v3 *hit, t_lst *obj)
 {
 	t_node 	*node;
 	t_ray	shadow;
+	double	dist = v3norm(*l_dir);
+	double	t;
 
 	node = obj->head;
-	shadow = (t_ray){*hit, *l_dir};
+	shadow = (t_ray){*hit, v3normalize(v3multf(*l_dir, -1))};
 	while (node != NULL)
 	{
 		if (node->obj.type == SPHERE &&
-			intersect_sphere(&shadow, &node->obj) >= 0.)
+			(t = intersect_sphere(&shadow, &node->obj) >= 0. && t < dist))
 			return (1);
 		if (node->obj.type == PLANE &&
-			intersect_plane(&shadow, &node->obj) >= 0.)
+			(t = intersect_plane(&shadow, &node->obj) >= 0. && t < dist))
 			return (1);
 		node = node->next;
 	}
@@ -126,6 +128,7 @@ t_v3	compute_lights(t_env *env, t_obj *obj)
 	double	i;
 
 	node = env->lights.head;
+	color = (t_v3){0., 0., 0.};
 	while (node != NULL)
 	{
 		i = node->obj.i;
@@ -134,11 +137,12 @@ t_v3	compute_lights(t_env *env, t_obj *obj)
 		else
 		{
 			t_v3 hit = v3add(env->ray.pos, v3multf(env->ray.dir, env->t));
-			t_v3 n = v3normalize(v3sub(hit, obj->pos));
-			l_dir = v3normalize(v3sub(node->obj.pos, hit));
+			t_v3 n = (obj->type != PLANE) ? v3normalize(v3sub(hit, obj->pos)) : obj->n;
+			l_dir = v3sub(hit, node->obj.pos);
 			if (cast_shadow(&l_dir, &hit, &env->objs) != 1)
 			{
-				dot = v3dot(n, l_dir);
+				l_dir = v3normalize(l_dir);
+				dot = -v3dot(n, l_dir);
 				if (dot > 0.)
 				{
 					color = add_color(color, multf_color(obj->color, i * dot / v3norm(n) * v3norm(l_dir)));

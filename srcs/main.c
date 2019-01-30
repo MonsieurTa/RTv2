@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/01/29 22:41:35 by wta              ###   ########.fr       */
+/*   Updated: 2019/01/30 18:00:53 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,31 @@ int	main(void)
 	init_lst(&env.objs);
 	init_lst(&env.lights);
 
-	pushback(&env.objs, newnode(new_plane((t_v3){0., 0., 0.}, (t_v3){0.,0.,1.},
-		(t_v3){50, 34., 120.}, (t_q){50, 0.2, 0.4, 0.3})));
-	pushback(&env.objs, newnode(new_plane((t_v3){0., 50., 0.}, (t_v3){0.,-1.,0.},
+//	pushback(&env.objs, newnode(new_plane((t_v3){0., 10., 0.}, (t_v3){0.,-1.,0.},
+//		(t_v3){50, 34., 120.}, (t_q){50, 0.2, 0.4, 0.3})));
+//	pushback(&env.objs, newnode(new_plane((t_v3){0., -50., 0.}, (t_v3){0.,1.,0.},
+//		(t_v3){50, 34., 120.}, (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_plane((t_v3){0., 0., -1.}, (t_v3){0.,0.,1.},
 		(t_v3){0, 0., 255.}, (t_q){50, 0.2, 0.4, 0.3})));
-	pushback(&env.objs, newnode(new_sphere((t_v3){0., 0., 0.}, (t_v3){255., 0., 0.},
-		1., (t_q){50, 0.2, 0.4, 0.3})));
-	pushback(&env.objs, newnode(new_sphere((t_v3){5., 0., 0.}, (t_v3){0., 255., 0.},
+	pushback(&env.objs, newnode(new_sphere((t_v3){-5., 0., 0.}, (t_v3){123., 23., 53.},
+		2., (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){0., 0., 0.}, (t_v3){23., 200., 34.},
+		0.5, (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){0., -15., 0.}, (t_v3){23., 200., 34.},
+		0.5, (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){5., 0., 0.}, (t_v3){90., 32., 45.},
+		2., (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){0., 5, 0.}, (t_v3){23., 25., 10.},
+		2., (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){0., -5, 0.}, (t_v3){65., 65., 170.},
+		2., (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){0., 0, 5.}, (t_v3){165., 65., 170.},
+		2., (t_q){50, 0.2, 0.4, 0.3})));
+	pushback(&env.objs, newnode(new_sphere((t_v3){0., 0, -5.}, (t_v3){65., 165., 170.},
 		2., (t_q){50, 0.2, 0.4, 0.3})));
 	pushback(&env.lights, newnode(new_light(AMBT_LIGHT, (t_v3){0., 0., 0.},
 		(t_v3){255, 255., 255.}, (t_v3){0., 0.2, 0.})));
-	pushback(&env.lights, newnode(new_light(SPHERE_LIGHT, (t_v3){0., -10., 0.},
+	pushback(&env.lights, newnode(new_light(SPHERE_LIGHT, (t_v3){0., -30., 1.},
 		(t_v3){255, 255., 255.}, (t_v3){0., 0.6, 0.})));
 	mlx_flow(&env);
 	return (0);
