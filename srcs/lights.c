@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 17:30:18 by wta               #+#    #+#             */
-/*   Updated: 2019/01/29 17:24:19 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/10 06:09:43 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,19 @@ t_obj	new_plane(t_v3 pos, t_v3 n, t_v3 color, t_q phong)
 	new.radius = 0.;
 	new.pos = pos;
 	new.n = n;
+	new.color = color;
+	new.phong = phong;
+	return (new);
+}
+
+t_obj	new_cylinder(t_v3 pos, t_v3 dir, t_v3 color, t_q phong)
+{
+	t_obj	new;
+
+	new.type = CYLINDER;
+	new.radius = 1;
+	new.pos = pos;
+	new.dir = v3normalize(dir);
 	new.color = color;
 	new.phong = phong;
 	return (new);

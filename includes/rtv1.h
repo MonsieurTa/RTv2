@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/01/30 12:19:58 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/10 07:08:33 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,12 @@
 # define K_Q			12
 # define K_W			13
 # define K_E			14
-# define K_O			31
-# define K_I			34
 # define K_SHIFT		257
+# define K_PGUP			116
+# define K_PGDOWN		121
 # define K_PLUS			69
 # define K_MINUS		78
 # define NUM_ZERO		82
-# define OPT_FLOOR		83
 # define ESC			53
 # define DST_LIGHT		0
 # define SPHERE_LIGHT	1
@@ -46,6 +45,7 @@
 # define AMBT_LIGHT		3
 # define SPHERE			4
 # define PLANE			5
+# define CYLINDER		6
 # define PIXEL			16
 
 #include "quaternions.h"
@@ -101,6 +101,7 @@ typedef struct		s_obj
 	double			radius;
 	double			i;
 	t_v3			pos;
+	t_v3			dir;
 	t_v3			n;
 	t_v3			color;
 	t_q				phong;
@@ -141,9 +142,6 @@ typedef struct		s_cam
 {
 	t_view			view;
 	t_v3			pos;
-	double			theta;
-	double			phi;
-	double			r;
 	t_v3			dir;
 	t_v3			up;
 	t_v3			right;
@@ -178,6 +176,7 @@ void				compute_pos(t_cam *cam);
 t_obj				new_light(char type, t_v3 pos, t_v3 color, t_v3 aux);
 t_obj				new_sphere(t_v3 pos, t_v3 color, double radius, t_q phong);
 t_obj				new_plane(t_v3 pos, t_v3 n, t_v3 color, t_q phong);
+t_obj				new_cylinder(t_v3 pos, t_v3 dir, t_v3 color, t_q phong);
 
 t_node				*newnode(t_obj obj);
 void				init_lst(t_lst *lst);

@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 15:44:28 by wta               #+#    #+#             */
-/*   Updated: 2019/01/25 12:47:13 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/10 04:43:17 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,15 @@ t_v3	v3normalize(t_v3 v)
 
 	length = v3norm(v);
 	vector = (t_v3){v.x / length, v.y / length, v.z / length};
+	return (vector);
+}
+
+t_v3	v3project(t_v3 v, t_v3 w)
+{
+	t_v3	vector;
+	double	scalar;
+
+	scalar = v3dot(v, w) / v3dot(w, w);
+	vector = v3multf(w, scalar);
 	return (vector);
 }

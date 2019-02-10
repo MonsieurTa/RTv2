@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/01/30 18:05:56 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/10 09:06:38 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,21 @@
 
 void	pxl_to_img(t_img *img, int x, int y, int color)
 {
-	img->img_str[x + (y * img->sizel / 4)] = color;
+	img->img_str[x + (y * SCREEN_W)] = color;
 }
 
 double	intersect_plane(t_ray *ray, t_obj *plane)
 {
-	
 	double	denom;
 	double	t;
 	t_v3	pos;
 
+	denom = v3dot(plane->n, ray->dir);
 	if ((denom = v3dot(plane->n, ray->dir)) != 0.)
 	{
 		pos = v3sub(plane->pos, ray->pos);
 		t = v3dot(pos, plane->n) / denom;
-		return ((t >= 0.001) ? t : -1);
+		return ((t >= 0.) ? t : -1);
 	}
 	return (-1);
 }
@@ -45,6 +45,25 @@ double	intersect_sphere(t_ray *ray, t_obj *sphere)
 	quad.b = 2 * v3dot(ray->dir, moveto);
 	quad.c = v3dot(moveto, moveto) - sqr(sphere->radius);
 	return (do_quad(quad));
+}
+
+double	intersect_cylinder(t_ray *ray, t_obj *cylinder)
+{
+	t_ray	c;
+	t_ray	raycpy;
+	t_obj	sphere;
+
+	c.pos = v3project(cylinder->pos, cylinder->dir);
+	c.dir = v3sub(cylinder->pos, c.pos);
+	raycpy.pos = v3project(ray->pos, cylinder->dir);
+	raycpy.pos = v3sub(ray->pos, raycpy.pos);
+	raycpy.dir = v3project(ray->dir, cylinder->dir);
+	raycpy.dir = v3sub(ray->dir, raycpy.dir);
+	sphere.pos = c.dir;
+	sphere.color = cylinder->color;
+	sphere.radius = cylinder->radius;
+	sphere.phong = cylinder->phong;
+	return (intersect_sphere(&raycpy, &sphere));
 }
 
 int		clamp(double value, int max, int min)
@@ -109,14 +128,54 @@ int		cast_shadow(t_v3 *l_dir, t_v3 *hit, t_lst *obj)
 	while (node != NULL)
 	{
 		if (node->obj.type == SPHERE &&
-			(t = intersect_sphere(&shadow, &node->obj) >= 0. && t < dist))
+				((t = intersect_sphere(&shadow, &node->obj)) >= 0.0001 && t < dist))
 			return (1);
 		if (node->obj.type == PLANE &&
-			(t = intersect_plane(&shadow, &node->obj) >= 0. && t < dist))
+				((t = intersect_plane(&shadow, &node->obj)) >= 0.0001 && t < dist))
+			return (1);
+		if (node->obj.type == CYLINDER &&
+				((t = intersect_cylinder(&shadow, &node->obj)) >= 0.0001 && t < dist))
 			return (1);
 		node = node->next;
 	}
 	return (0);
+}
+
+t_v3	get_normal(t_env *env, t_v3 *hit, t_obj *obj)
+{
+	t_v3	normal;
+	t_v3	tmp;
+	t_v3	tmp2;
+
+	if (obj->type == PLANE)
+	{
+		if (v3dot(env->ray.dir, obj->n) >= 0)
+			normal = v3multf(obj->n, -1);
+		else
+			normal = obj->n;
+	}
+	if (obj->type == SPHERE)
+	{
+		tmp = v3sub(*hit, obj->pos);
+		*hit = v3add(*hit, v3multf(tmp, 0.0001));
+		if (v3dot(env->ray.dir, tmp) >= 0)
+			normal = v3normalize(v3multf(tmp, -1));
+		else
+			normal = v3normalize(tmp);
+	}
+	if (obj->type == CYLINDER)
+	{
+		tmp = v3sub(*hit, obj->pos);
+		tmp2 = v3sub(env->ray.pos, obj->pos);
+		tmp = v3sub(tmp, v3project(tmp, obj->dir));
+		tmp2 = v3sub(tmp2, v3project(tmp2, obj->dir));
+		normal = v3normalize(tmp);
+		if (v3norm(tmp2) < v3norm(tmp))
+			*hit = v3add(*hit, v3multf(normal, -0.0001));
+		else
+			*hit = v3add(*hit, v3multf(normal, 0.0001));
+	}
+	return (normal);
 }
 
 t_v3	compute_lights(t_env *env, t_obj *obj)
@@ -124,6 +183,7 @@ t_v3	compute_lights(t_env *env, t_obj *obj)
 	t_node	*node;
 	t_v3	l_dir;
 	t_v3	color;
+	t_v3	n;
 	double	dot;
 	double	i;
 
@@ -137,7 +197,7 @@ t_v3	compute_lights(t_env *env, t_obj *obj)
 		else
 		{
 			t_v3 hit = v3add(env->ray.pos, v3multf(env->ray.dir, env->t));
-			t_v3 n = (obj->type != PLANE) ? v3normalize(v3sub(hit, obj->pos)) : obj->n;
+			n = get_normal(env, &hit, obj);
 			l_dir = v3sub(hit, node->obj.pos);
 			if (cast_shadow(&l_dir, &hit, &env->objs) != 1)
 			{
@@ -158,9 +218,10 @@ t_v3	compute_lights(t_env *env, t_obj *obj)
 int		cast_ray(t_env *env, t_obj *obj)
 {
 	if ((obj->type == PLANE && (env->t = intersect_plane(&env->ray, obj)) >= 0.
-		&& env->t < env->tmax)
-		|| (obj->type == SPHERE && (env->t = intersect_sphere(&env->ray, obj)) >= 0.
-		&& env->t < env->tmax))
+				&& env->t < env->tmax)
+			|| (obj->type == SPHERE && (env->t = intersect_sphere(&env->ray, obj)) >= 0.
+				&& env->t < env->tmax)
+			|| (obj->type == CYLINDER && (env->t = intersect_cylinder(&env->ray, obj)) >= 0. && env->t < env->tmax))
 	{
 		env->pxl_clr = v3toi(compute_lights(env, obj));
 		env->tmax = env->t;
@@ -175,7 +236,7 @@ void	raycasting(t_env *env, int x, int y)
 	int		res;
 
 	node = env->objs.head;
-	env->tmax = 2000.;
+	env->tmax = 200.;
 	res = 0;
 	while (x % env->pxl == 0 && node != NULL)
 	{

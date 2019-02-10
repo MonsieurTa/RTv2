@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.41.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 12:52:13 by wta               #+#    #+#             */
-/*   Updated: 2019/01/29 16:48:45 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/10 06:44:33 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void	set_view(t_view *view)
 void	init_cam(t_cam *cam)
 {
 	set_view(&cam->view);
-	cam->phi = -M_PI / 2;
-	cam->theta = M_PI / 2.;
-	cam->r = 10.;
+	cam->pos.x = 0;
+	cam->pos.y = 0;
+	cam->pos.z = 0;
 	cam->x_rot = 0.;
 	cam->y_rot = 0.;
 	cam->z_rot = 0.;
@@ -85,7 +85,6 @@ void	compute_pos(t_cam *cam)
 	cam->dir = (t_v3){0., 1., 0.};
 	cam->right = (t_v3){1., 0., 0.};
 	cam->up = (t_v3){0., 0., 1.};
-	spheric_to_cart(&cam->pos, cam->r, cam->theta, cam->phi);
 	x = q_local_rot(cam->right, cam->x_rot);
 	y = q_local_rot(cam->dir, cam->y_rot);
 	z = q_local_rot(cam->up, cam->z_rot);
