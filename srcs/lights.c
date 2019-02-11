@@ -6,10 +6,11 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 17:30:18 by wta               #+#    #+#             */
-/*   Updated: 2019/02/10 06:09:43 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/11 04:53:21 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <math.h>
 #include "rtv1.h"
 
 t_obj	new_light(char type, t_v3 pos, t_v3 color, t_v3 aux)
@@ -54,7 +55,20 @@ t_obj	new_cylinder(t_v3 pos, t_v3 dir, t_v3 color, t_q phong)
 	t_obj	new;
 
 	new.type = CYLINDER;
-	new.radius = 1;
+	new.radius = 2;
+	new.pos = pos;
+	new.dir = v3normalize(dir);
+	new.color = color;
+	new.phong = phong;
+	return (new);
+}
+
+t_obj	new_cone(t_v3 pos, t_v3 dir, t_v3 color, t_q phong)
+{
+	t_obj	new;
+
+	new.type = CONE;
+	new.angle = M_PI / 10;
 	new.pos = pos;
 	new.dir = v3normalize(dir);
 	new.color = color;

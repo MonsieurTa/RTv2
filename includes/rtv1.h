@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/10 07:08:33 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/11 03:15:13 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@
 # define SPHERE			4
 # define PLANE			5
 # define CYLINDER		6
+# define CONE			7
 # define PIXEL			16
 
 #include "quaternions.h"
@@ -81,6 +82,13 @@ typedef struct		s_quad
 	double			det;
 }					t_quad;
 
+typedef struct		s_sph_coord
+{
+	double			radius;
+	double			theta;
+	double			phi;
+}					t_sph_coord;
+
 /*
 **	t_v3	n : normal vector
 **
@@ -99,6 +107,7 @@ typedef struct		s_obj
 {
 	char			type;
 	double			radius;
+	double			angle;
 	double			i;
 	t_v3			pos;
 	t_v3			dir;
@@ -177,10 +186,13 @@ t_obj				new_light(char type, t_v3 pos, t_v3 color, t_v3 aux);
 t_obj				new_sphere(t_v3 pos, t_v3 color, double radius, t_q phong);
 t_obj				new_plane(t_v3 pos, t_v3 n, t_v3 color, t_q phong);
 t_obj				new_cylinder(t_v3 pos, t_v3 dir, t_v3 color, t_q phong);
+t_obj				new_cone(t_v3 pos, t_v3 dir, t_v3 color, t_q phong);
 
 t_node				*newnode(t_obj obj);
 void				init_lst(t_lst *lst);
 void				pushback(t_lst *lst, t_node *node);
+
+t_sph_coord			cart_to_spheric(t_v3 cart);
 
 double				do_quad(t_quad quad);
 

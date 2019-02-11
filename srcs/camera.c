@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.41.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 12:52:13 by wta               #+#    #+#             */
-/*   Updated: 2019/02/10 06:44:33 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/11 03:23:44 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ void	spheric_to_cart(t_v3 *v, double r, double theta, double phi)
 	v->x = r * sin(theta) * cos(phi);
 	v->y = r * sin(theta) * sin(phi);
 	v->z = r * cos(theta);
+}
+
+t_sph_coord	cart_to_spheric(t_v3 cart)
+{
+	t_sph_coord	pos;
+
+	pos.radius = sqrt(sqr(cart.x) + sqr(cart.y) + sqr(cart.z));
+	pos.theta = atan(cart.y / cart.x);
+	pos.phi = acos(cart.z / pos.radius);
+	return (pos);
 }
 
 void	set_view(t_view *view)

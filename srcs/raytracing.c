@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/02/10 09:06:38 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/11 05:08:02 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,19 @@ double	intersect_cylinder(t_ray *ray, t_obj *cylinder)
 	sphere.radius = cylinder->radius;
 	sphere.phong = cylinder->phong;
 	return (intersect_sphere(&raycpy, &sphere));
+}
+
+double	intersect_cone(t_ray *ray, t_obj *cone)
+{
+	t_v3	moveto;
+	t_quad	quad;
+
+	moveto = v3sub(ray->pos, cone->pos);
+	quad.a = sqr(v3dot(ray->dir, cone->dir)) - sqr(cos(cone->angle));
+	quad.b = 2 * (v3dot(ray->dir, cone->dir) * v3dot(moveto, cone->dir) - v3dot(ray->dir, moveto)
+				* sqr(cos(cone->angle)));
+	quad.c = sqr(v3dot(moveto, cone->dir)) - v3dot(moveto, moveto) * sqr(cos(cone->angle));
+	return (do_quad(quad));
 }
 
 int		clamp(double value, int max, int min)
@@ -136,6 +149,9 @@ int		cast_shadow(t_v3 *l_dir, t_v3 *hit, t_lst *obj)
 		if (node->obj.type == CYLINDER &&
 				((t = intersect_cylinder(&shadow, &node->obj)) >= 0.0001 && t < dist))
 			return (1);
+		if (node->obj.type == CONE &&
+				((t = intersect_cone(&shadow, &node->obj)) >= 0.0001 && t < dist))
+			return (1);
 		node = node->next;
 	}
 	return (0);
@@ -174,6 +190,17 @@ t_v3	get_normal(t_env *env, t_v3 *hit, t_obj *obj)
 			*hit = v3add(*hit, v3multf(normal, -0.0001));
 		else
 			*hit = v3add(*hit, v3multf(normal, 0.0001));
+	}
+	if (obj->type == CONE)
+	{
+		tmp = v3sub(*hit, obj->pos);
+		if (v3dot(tmp, obj->dir) < 0)
+			tmp2 = v3cross(tmp, obj->dir);
+		else
+			tmp2 = v3cross(obj->dir, tmp);
+		normal = v3normalize(v3cross(tmp2, tmp));
+		if (v3dot(env->ray.dir, normal) > 0)
+			*hit = v3add(*hit, v3multf(normal, -0.0001));
 	}
 	return (normal);
 }
@@ -221,7 +248,8 @@ int		cast_ray(t_env *env, t_obj *obj)
 				&& env->t < env->tmax)
 			|| (obj->type == SPHERE && (env->t = intersect_sphere(&env->ray, obj)) >= 0.
 				&& env->t < env->tmax)
-			|| (obj->type == CYLINDER && (env->t = intersect_cylinder(&env->ray, obj)) >= 0. && env->t < env->tmax))
+			|| (obj->type == CYLINDER && (env->t = intersect_cylinder(&env->ray, obj)) >= 0. && env->t < env->tmax)
+			|| (obj->type == CONE && (env->t = intersect_cone(&env->ray, obj)) >= 0. && env->t < env->tmax))
 	{
 		env->pxl_clr = v3toi(compute_lights(env, obj));
 		env->tmax = env->t;
@@ -236,7 +264,7 @@ void	raycasting(t_env *env, int x, int y)
 	int		res;
 
 	node = env->objs.head;
-	env->tmax = 200.;
+	env->tmax = INFINITY;
 	res = 0;
 	while (x % env->pxl == 0 && node != NULL)
 	{
