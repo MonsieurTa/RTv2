@@ -6,42 +6,13 @@
 /*   By: wta <wta@student.41.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 12:52:13 by wta               #+#    #+#             */
-/*   Updated: 2019/02/11 03:23:44 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/12 06:08:42 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "vectors.h"
 #include "rtv1.h"
-
-#include <stdio.h>
-
-void	check_dir(t_v3 dir)
-{
-	if (dir.x == 0. && dir.y == 0. && dir.z == 0)
-		err_handler(BAD_CMRDIR);
-	if (dir.x == 0. && dir.y == 0. && dir.z == 1.)
-		err_handler(BAD_CMRDIR);
-	if (dir.x == 0. && dir.y == 0. && dir.z == -1.)
-		err_handler(BAD_CMRDIR);
-}
-
-void	spheric_to_cart(t_v3 *v, double r, double theta, double phi)
-{
-	v->x = r * sin(theta) * cos(phi);
-	v->y = r * sin(theta) * sin(phi);
-	v->z = r * cos(theta);
-}
-
-t_sph_coord	cart_to_spheric(t_v3 cart)
-{
-	t_sph_coord	pos;
-
-	pos.radius = sqrt(sqr(cart.x) + sqr(cart.y) + sqr(cart.z));
-	pos.theta = atan(cart.y / cart.x);
-	pos.phi = acos(cart.z / pos.radius);
-	return (pos);
-}
 
 void	set_view(t_view *view)
 {

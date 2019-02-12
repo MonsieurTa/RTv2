@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/11 03:15:13 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/12 11:15:51 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define MLX_ERR		7
 # define BAD_CMRDIR		8
 # define SCREEN_W		1200
-# define SCREEN_H		720
+# define SCREEN_H		700
 # define K_LEFT			123
 # define K_UP			126
 # define K_RIGHT		124
@@ -48,9 +48,11 @@
 # define CYLINDER		6
 # define CONE			7
 # define PIXEL			16
+# define EPS			0.0001
+# define MAX_THREAD		8
 
-#include "quaternions.h"
-#include "vectors.h"
+# include "quaternions.h"
+# include "vectors.h"
 
 typedef unsigned char	t_uchar;
 
@@ -163,21 +165,41 @@ typedef struct		s_ray
 {
 	t_v3			pos;
 	t_v3			dir;
+	double			tmax;
+	int				color;
 }					t_ray;
+
+typedef struct		s_shading
+{
+	t_v3			hit;
+	t_v3			normal;
+	t_v3			l_dir;
+	t_v3			color;
+	double			i;
+}					t_shading;
 
 typedef struct		s_env
 {
 	t_mlx			mlx;
 	t_lst			lights;
 	t_lst			objs;
-	double			t;
-	double			tmax;
 	t_cam			cam;
 	t_ray			ray;
-	int				pxl_clr;
 	int				pxl;
 	int				key_pressed;
+	int				counter;
+	int				spt;
+	double			max_w;
 }					t_env;
+
+typedef enum		e_error
+{
+	ERR_NOERROR,
+	ERR_BADFMT,
+	ERR_MALLOC,
+	ERR_NOFILE,
+	ERR_GNL
+}					t_error;
 
 void				init_cam(t_cam *cam);
 void				compute_pos(t_cam *cam);
@@ -192,16 +214,42 @@ t_node				*newnode(t_obj obj);
 void				init_lst(t_lst *lst);
 void				pushback(t_lst *lst, t_node *node);
 
-t_sph_coord			cart_to_spheric(t_v3 cart);
+t_error				read_file(t_env *env, char *file);
+
+t_v3				get_normal(t_ray *ray, t_v3 *hit, t_obj *obj);
+double				intersect_cone(t_ray *ray, t_obj *cone);
+double				intersect_cylinder(t_ray *ray, t_obj *cylinder);
+double				intersect_sphere(t_ray *ray, t_obj *sphere);
+double				intersect_plane(t_ray *ray, t_obj *plane);
+
+int					cast_shadow(t_v3 *l_dir, t_v3 *hit, t_lst *obj);
+void				compute_lights(t_env *env, t_shading *shading, t_obj *obj);
+
+t_v3				add_color(t_v3 c1, t_v3 c2);
+t_v3				multf_color(t_v3 color, double coef);
 
 double				do_quad(t_quad quad);
 
 void				render(t_env *env);
+int					draw_all(t_env *env);
+int					count_thread(int *counter);
 
 int					key_pressed(int key, void *param);
 int					key_released(int key, void *param);
 int					apply_key(void *param);
 int					close_win(void);
+
+void				pxl_to_img(t_img *img, int x, int y, int color);
+int					v3toi(t_v3 v);
+int					clampf(double value, double max, double min);
+int					clamp(double value, int max, int min);
+
+int					split_n_count(char *str, char c, char ***split);
+double				ft_atof(char *str);
+int					is_number(char *str);
+int					is_float(char *str);
+void				delsplit(char **split);
+int					is_v3(char **split);
 
 void				err_handler(int err_id);
 

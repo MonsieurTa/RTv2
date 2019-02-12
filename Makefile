@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/01 02:51:44 by wta               #+#    #+#              #
-#    Updated: 2019/01/29 05:04:51 by wta              ###   ########.fr        #
+#    Updated: 2019/02/12 08:59:44 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,29 +21,40 @@ NAME		=	rtv1
 SRCSDIR		=	srcs
 LIBFTPATH	=	libft
 LIBFTLIB	=	libft.a
-LIBFT		=	$(addprefix $(LIBFTPATH)/,$(LIBFTLIB))
+LIBFT		=	$(addprefix $(LIBFTPATH)/, $(LIBFTLIB))
 INCDIR		=	includes
 MLXDIR		= 	minilibx_macos
 OBJDIR		=	objs
 OBJ			=	$(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
-CC			=	gcc
+CC			=	gcc -g -fsanitize=address
 INC			=	-I $(INCDIR) -I $(MLXDIR)
 CFLAGS		=	-Wall -Wextra -Werror -Ofast
 MLXLIB		=	-L $(MLXDIR) -lmlx
 MLXFLAG		=	-framework OpenGL -framework Appkit
-SRCS=			\
-camera.c		\
-error.c			\
-event.c			\
-list.c			\
-main.c			\
-quadratic.c		\
-quaternions.c	\
-lights.c		\
-raytracing.c	\
-utils.c			\
-vectors.c		\
-vectors_2.c
+SRCS=				\
+camera.c			\
+color.c				\
+error.c				\
+event.c				\
+event_pressed.c		\
+event_released.c	\
+intersect.c			\
+lights.c			\
+object.c			\
+list.c				\
+normal.c			\
+main.c				\
+quadratic.c			\
+quaternions.c		\
+quaternions_2.c		\
+raytracing.c		\
+read_file.c			\
+utils.c				\
+utils_2.c			\
+vectors.c			\
+vectors_2.c			\
+vectors_3.c			\
+thread.c
 HEADER		=	\
 rtv1.h			\
 quaternions.h	\
