@@ -1,0 +1,9 @@
+type=light
+pos=10,-10,0
+i=0.4
+color=255,255,255
+type=sphere
+pos=0,10,0
+color=0,0,255
+radius=3
+phong=75,0.2,0.2,0.2

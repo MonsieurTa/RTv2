@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/01 02:51:44 by wta               #+#    #+#              #
-#    Updated: 2019/02/12 08:59:44 by wta              ###   ########.fr        #
+#    Updated: 2019/02/26 19:10:16 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ INCDIR		=	includes
 MLXDIR		= 	minilibx_macos
 OBJDIR		=	objs
 OBJ			=	$(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
-CC			=	gcc -g -fsanitize=address
+CC			=	gcc
 INC			=	-I $(INCDIR) -I $(MLXDIR)
 CFLAGS		=	-Wall -Wextra -Werror -Ofast
 MLXLIB		=	-L $(MLXDIR) -lmlx
@@ -51,6 +51,7 @@ raytracing.c		\
 read_file.c			\
 utils.c				\
 utils_2.c			\
+utils_3.c			\
 vectors.c			\
 vectors_2.c			\
 vectors_3.c			\

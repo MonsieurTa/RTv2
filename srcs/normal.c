@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:27:57 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 11:19:15 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/25 16:07:14 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ t_v3	normal_plane(t_ray *ray, t_v3 *hit, t_obj *obj)
 {
 	t_v3	normal;
 
-	if (v3dot(ray->dir, obj->n) < 0)
-	{
-		obj->n = v3multf(obj->n, -1);
-		*hit = v3add(*hit, v3multf(obj->n, EPS));
-	}
-	else
-		*hit = v3add(*hit, v3multf(obj->n, -EPS));
 	normal = obj->n;
+	if (v3dot(ray->dir, obj->n) < 0)
+		*hit = v3add(*hit, v3multf(obj->n, EPS));
+	else
+	{
+		*hit = v3add(*hit, v3multf(obj->n, -EPS));
+		normal = v3multf(obj->n, -1);
+	}
 	return (v3normalize(normal));
 }
 

@@ -1,0 +1,10 @@
+type=light
+pos=20,0,0
+i=0.3
+color=255,255,255
+type=cylinder
+pos=0,30,0
+radius=7
+dir=0,0,1
+color=0,255,0
+phong=0,0.2,0.2,0.2

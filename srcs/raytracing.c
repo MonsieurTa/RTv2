@@ -6,11 +6,10 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 11:16:29 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/26 17:51:45 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <math.h>
 #include "../libft/includes/libft.h"
 #include "rtv1.h"
@@ -22,7 +21,7 @@ int		cast_ray(t_env *env, t_ray *ray, t_obj *obj, int *color)
 
 	ft_memset(&shading, 0, sizeof(t_shading));
 	if ((obj->type == PLANE
-				&& (t = intersect_plane(ray, obj)) >= 0.
+			&& (t = intersect_plane(ray, obj)) >= 0.
 				&& t < ray->tmax)
 			|| (obj->type == SPHERE
 				&& (t = intersect_sphere(ray, obj)) >= 0.
@@ -59,7 +58,7 @@ void	raycasting(t_env *env, t_ray *ray, t_v3 *pxl)
 		node = node->next;
 	}
 	if (res == 0 && (int)pxl->x % env->pxl == 0)
-		ray->color = 0x282828;
+		ray->color = 0x0;
 	pxl_to_img(&env->mlx.img, (int)pxl->x, (int)pxl->y, ray->color);
 }
 

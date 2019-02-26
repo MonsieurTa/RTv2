@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 11:15:51 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/26 19:09:59 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define READ_ERR		6
 # define MLX_ERR		7
 # define BAD_CMRDIR		8
-# define SCREEN_W		1200
+# define SCREEN_W		700
 # define SCREEN_H		700
 # define K_LEFT			123
 # define K_UP			126
@@ -39,16 +39,14 @@
 # define K_MINUS		78
 # define NUM_ZERO		82
 # define ESC			53
-# define DST_LIGHT		0
+# define AMBT_LIGHT		0
 # define SPHERE_LIGHT	1
-# define DIR_LIGHT		2
-# define AMBT_LIGHT		3
 # define SPHERE			4
 # define PLANE			5
 # define CYLINDER		6
 # define CONE			7
 # define PIXEL			16
-# define EPS			0.0001
+# define EPS			0.001
 # define MAX_THREAD		8
 
 # include "quaternions.h"
@@ -173,7 +171,7 @@ typedef struct		s_shading
 {
 	t_v3			hit;
 	t_v3			normal;
-	t_v3			l_dir;
+	t_ray			light;
 	t_v3			color;
 	double			i;
 }					t_shading;
@@ -222,7 +220,7 @@ double				intersect_cylinder(t_ray *ray, t_obj *cylinder);
 double				intersect_sphere(t_ray *ray, t_obj *sphere);
 double				intersect_plane(t_ray *ray, t_obj *plane);
 
-int					cast_shadow(t_v3 *l_dir, t_v3 *hit, t_lst *obj);
+int					cast_shadow(t_ray *light, t_v3 *hit, t_lst *obj);
 void				compute_lights(t_env *env, t_shading *shading, t_obj *obj);
 
 t_v3				add_color(t_v3 c1, t_v3 c2);

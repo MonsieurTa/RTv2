@@ -6,11 +6,10 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 06:38:57 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 09:25:17 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/26 17:56:57 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "../libft/includes/libft.h"
 #include "../libft/includes/ft_printf.h"
 
@@ -80,7 +79,7 @@ int		is_float(char *str)
 	return (str != NULL);
 }
 
-double		ft_atof(char *str)
+double	ft_atof(char *str)
 {
 	int		idx;
 	int		jdx;
@@ -99,10 +98,10 @@ double		ft_atof(char *str)
 		idx += 1;
 	}
 	res += (double)ft_atoi(str);
-	return (res);
+	return ((str[0] == '-' && res > -1 && res < 1) ? -res : res);
 }
 
-void		delsplit(char **split)
+void	delsplit(char **split)
 {
 	int	i;
 
@@ -113,18 +112,4 @@ void		delsplit(char **split)
 		i += 1;
 	}
 	free(split);
-}
-
-int			is_v3(char **split)
-{
-	int	i;
-
-	i = 0;
-	while (split[i] != NULL)
-	{
-		if (is_float(split[i]) == 0 && is_number(split[i]) == 0)
-			return (0);
-		i++;
-	}
-	return (1);
 }

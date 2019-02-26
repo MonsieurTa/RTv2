@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:18:54 by wta               #+#    #+#             */
-/*   Updated: 2019/01/14 09:43:22 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/26 15:38:54 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,9 +117,9 @@ int				get_next_line(const int fd, char **line)
 		lst_fd = rm_elem(lst_fd, fd);
 		return (-1);
 	}
-	if ((file = get_file(&lst_fd, fd)) == NULL ||
-	(((t_gnl*)file->cnt)->str = get_str(fd, ((t_gnl*)file->cnt)->str,
-		&ret)) == NULL)
+	if ((file = get_file(&lst_fd, fd)) == NULL
+			|| (((t_gnl*)file->cnt)->str = get_str(fd, ((t_gnl*)file->cnt)->str,
+					&ret)) == NULL)
 		return (-1);
 	if (ret < BUFF_SIZE && (*(((t_gnl*)file->cnt)->str)) == '\0')
 	{

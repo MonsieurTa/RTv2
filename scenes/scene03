@@ -1,0 +1,15 @@
+type=light
+pos=0,0,0
+i=1
+color=255,255,255
+type=cone
+pos=0,5,0
+angle=36
+dir=0,0,1
+color=0,255,255
+phong=0,0.2,0.2,0.2
+type=plane
+pos=0,0,-1
+normal=0,0,1
+color=255,0,0
+phong=0,0.2,0.2,0.2

@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:23:43 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 11:20:33 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/25 16:02:19 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ double	intersect_plane(t_ray *ray, t_obj *plane)
 	t_v3	pos;
 
 	denom = v3dot(plane->n, ray->dir);
-	if ((denom = v3dot(plane->n, ray->dir)) > 0.)
+	denom = (denom < 0) ? -denom : denom;
+	if ((denom = v3dot(plane->n, ray->dir)) != 0.)
 	{
 		pos = v3sub(plane->pos, ray->pos);
 		t = v3dot(pos, plane->n) / denom;
-		return ((t >= EPS) ? t : -1);
+		return ((t > EPS) ? t : -1);
 	}
 	return (-1);
 }
@@ -69,7 +70,7 @@ double	intersect_cone(t_ray *ray, t_obj *cone)
 	moveto = v3sub(ray->pos, cone->pos);
 	quad.a = sqr(v3dot(ray->dir, cone->dir)) - sqr(cos(cone->angle));
 	quad.b = 2 * (v3dot(ray->dir, cone->dir) * v3dot(moveto, cone->dir)
-		- v3dot(ray->dir, moveto)
+			- v3dot(ray->dir, moveto)
 			* sqr(cos(cone->angle)));
 	quad.c = sqr(v3dot(moveto, cone->dir)) - v3dot(moveto, moveto)
 		* sqr(cos(cone->angle));

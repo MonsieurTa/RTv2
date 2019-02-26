@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 10:12:54 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/26 14:00:54 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,6 @@ int		main(int ac, char **av)
 	init_cam(&env.cam);
 	env.spt = SCREEN_H / MAX_THREAD;
 	read_file(&env, av[1]);
-	pushback(&env.lights, newnode(new_light(AMBT_LIGHT, (t_v3){0., 0., 0.},
-					(t_v3){255, 255., 255.}, (t_v3){0., 0.2, 0.})));
-	pushback(&env.lights, newnode(new_light(SPHERE_LIGHT, (t_v3){-3., 0., 10.},
-					(t_v3){255, 255., 255.}, (t_v3){0., 0.4, 0.})));
-	pushback(&env.lights, newnode(new_light(SPHERE_LIGHT, (t_v3){5., 50., 10.},
-					(t_v3){255, 255., 255.}, (t_v3){0., 0.4, 0.})));
 	mlx_flow(&env);
 	return (0);
 }

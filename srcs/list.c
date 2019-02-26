@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/23 20:30:24 by wta               #+#    #+#             */
-/*   Updated: 2019/01/24 03:31:03 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/26 13:26:05 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,6 @@ t_node	*newnode(t_obj obj)
 		node->obj = obj;
 	}
 	return (node);
-}
-
-void	init_lst(t_lst *lst)
-{
-	if (lst != NULL)
-	{
-		lst->head = NULL;
-		lst->tail = NULL;
-	}
 }
 
 void	pushback(t_lst *lst, t_node *node)
