@@ -6,11 +6,13 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 13:21:45 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 15:17:04 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
 #include "../libft/includes/libft.h"
 #include "mlx.h"
 #include "rtv1.h"
@@ -46,18 +48,40 @@ void	mlx_flow(t_env *env)
 	mlx_loop(env->mlx.mlx_ptr);
 }
 
+void	err_handler(t_error id)
+{
+	char	buf[255];
+
+	ft_bzero(buf, 255);
+	ft_strcat(buf, "Terminated with error: ");
+	if (id == ERR_ERRNO)
+		ft_strcat(buf, strerror(errno));
+	if (id == ERR_BADFMT)
+		ft_strcat(buf, "Bad format");
+	if (id == ERR_MALLOC)
+		ft_strcat(buf, "Malloc failed");
+	if (id == ERR_GNL)
+		ft_strcat(buf, "GNL failed");
+	ft_strcat(buf, "\n");
+	write(2, buf, ft_strlen(buf));
+}
+
 int		main(int ac, char **av)
 {
 	t_error	id;
 	t_env	env;
 
+	id = ERR_NOERROR;
 	if (ac == 2)
 	{
 		ft_memset(&env, 0, sizeof(t_env));
 		init_cam(&env.cam);
 		env.spt = SCREEN_H / MAX_THREAD;
+		id = read_file(&env, av[1]);
 		if ((id = read_file(&env, av[1])) == ERR_NOERROR)
 			mlx_flow(&env);
 	}
+	if (id != ERR_NOERROR)
+		err_handler(id);
 	return (0);
 }

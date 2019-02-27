@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 14:42:38 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 15:29:55 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 # define CONE			7
 # define PIXEL			16
 # define EPS			0.001
-# define MAX_THREAD		8
+# define MAX_THREAD		16
 
 # include "quaternions.h"
 # include "vectors.h"
@@ -81,13 +81,6 @@ typedef struct		s_quad
 	double			r1;
 	double			det;
 }					t_quad;
-
-typedef struct		s_sph_coord
-{
-	double			radius;
-	double			theta;
-	double			phi;
-}					t_sph_coord;
 
 /*
 **	t_v3	n : normal vector
@@ -196,7 +189,6 @@ typedef enum		e_error
 	ERR_ERRNO,
 	ERR_BADFMT,
 	ERR_MALLOC,
-	ERR_NOFILE,
 	ERR_GNL
 }					t_error;
 
@@ -258,6 +250,6 @@ t_error				get_camera(t_env *env, int fd);
 
 t_error				get_v3(t_obj *obj, int fd, char *str);
 t_error				get_v3_spec(t_obj *obj, char *str, char **split, int cnt);
-void				err_handler(int err_id);
+void				err_handler(t_error err_id);
 
 #endif
