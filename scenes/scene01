@@ -6,4 +6,4 @@ type=sphere
 pos=0,10,0
 color=0,0,255
 radius=3
-phong=75,0.2,0.2,0.2
+specular=75

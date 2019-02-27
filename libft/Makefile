@@ -6,7 +6,7 @@
 #    By: wta <wta@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/07/28 20:09:26 by wta               #+#    #+#              #
-#    Updated: 2019/01/21 14:09:11 by wta              ###   ########.fr        #
+#    Updated: 2019/02/27 14:56:59 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 #=======================================================================  COLOR#
@@ -60,7 +60,7 @@ all : $(NAME)
 #=======================================================================# NAME #
 $(NAME) : $(OBJLIBFT) $(OBJPRINTF) $(addprefix $(INCDIR)/,$(HEADER))
 	@ar -rcs $(NAME) $(OBJLIBFT) $(OBJPRINTF)
-	@echo "\n$(_GREEN)[CREATED]$(_WHITE)" $(CURRDIR)/$@
+	@echo "$(_GREEN)[CREATED]$(_WHITE)" $(CURRDIR)/$@
 	@echo "All objects files are in $(_DYELLOW)$(CURRDIR)/obj$(_WHITE)/"
 #===================================================================# MKDIROBJ #
 $(OBJDIR) :
@@ -69,13 +69,11 @@ $(OBJDIR) :
 #==================================================================# FT_PRINTF #
 $(addprefix $(OBJDIR)/,%.o) : $(addprefix $(FT_PRINTF)/,%.c) | $(OBJDIR) 
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $< 
-	@echo "\r                                                              \r\c"
-	@echo "$(_GREEN)[OK]$(_WHITE) $(CURRDIR)/$@\c"
+	@echo "$(_GREEN)[OK]$(_WHITE) $(CURRDIR)/$@"
 #======================================================================# LIBFT #
 $(addprefix $(OBJDIR)/,%.o) : $(addprefix $(LIBFT)/,%.c) | $(OBJDIR) 
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $< 
-	@echo "\r                                                              \r\c"
-	@echo "$(_GREEN)[OK]$(_WHITE) $(CURRDIR)/$@\c"
+	@echo "$(_GREEN)[OK]$(_WHITE) $(CURRDIR)/$@"
 #======================================================================# CLEAN #
 clean :
 	@rm -f $(OBJ)

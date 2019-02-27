@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
+#    By: wta <wta@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/12/01 02:51:44 by wta               #+#    #+#              #
-#    Updated: 2019/02/26 19:10:16 by wta              ###   ########.fr        #
+#    Created: 2019/02/27 13:03:04 by wta               #+#    #+#              #
+#    Updated: 2019/02/27 14:56:25 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,6 @@ event_pressed.c		\
 event_released.c	\
 intersect.c			\
 lights.c			\
-object.c			\
 list.c				\
 normal.c			\
 main.c				\
@@ -49,6 +48,9 @@ quaternions.c		\
 quaternions_2.c		\
 raytracing.c		\
 read_file.c			\
+read_file_helper.c	\
+read_file_helper2.c	\
+read_file_helper3.c	\
 utils.c				\
 utils_2.c			\
 utils_3.c			\
@@ -65,26 +67,27 @@ vectors.h
 all : $(NAME)
 # NAME #
 $(NAME) : $(LIBFT) $(OBJ)
+	@$(MAKE) -C $(MLXDIR)
 	@$(CC) $(CFLAGS) $(MLXLIB) $(MLXFLAG) $(INC) $(OBJ) $(LIBFT) -o $@
-	@echo "\n$(_GREEN)[CREATED]$(_WHITE)" $@
+	@echo "$(_GREEN)[CREATED]$(_WHITE)" $@
 	@echo "All objects files are in $(_DYELLOW)/obj$(_WHITE)"
 # MKDIROBJ #
 $(OBJDIR) :
 	@mkdir $@
-	@echo "\n$(_YELLOW)[CREATED]$(_WHITE)" $@/
+	@echo "$(_YELLOW)[CREATED]$(_WHITE)" $@/
 # RTv1 #
 $(addprefix $(OBJDIR)/,%.o) : $(addprefix $(SRCSDIR)/,%.c) $(addprefix $(INCDIR)/,$(HEADER)) | $(OBJDIR)
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
-	@echo "\r                                                              \r\c"
-	@echo "$(_GREEN)[OK]$(_WHITE) /$@\c"
+	@echo "$(_GREEN)[OK]$(_WHITE) /$@"
 # LIBFT #
 $(LIBFT) :
 	@make -C $(LIBFTPATH)
-	@echo "\r                                                              \r\c"
-	@echo "$(_GREEN)[OK]$(_WHITE) $@\c"
+	@echo "$(_GREEN)[OK]$(_WHITE) $@"
 norm :
 	norminette libft/**/*.[ch] srcs/*.c includes/*.h
 # CLEAN LIBFT#
+clean_mlx:
+	@$(MAKE) -C $(MLXDIR) clean
 clean_libft:
 	@make -C $(LIBFTPATH) clean
 # CLEAN_RTv1 #
@@ -97,12 +100,12 @@ clean_rtv1 :
 fclean_libft:
 	@make -C $(LIBFTPATH) fclean
 # CLEAN #
-clean : clean_libft
+clean : clean_libft clean_mlx
 	@rm -f	$(NAME)
 	@echo "$(_DYELLOW)[FCLEAN] (RTv1)$(_WHITE)" /$(NAME)
 
 # FCLEAN #
-fclean : clean_rtv1 fclean_libft
+fclean : clean_rtv1 fclean_libft clean_mlx
 	@rm -f	$(NAME)
 	@echo "$(_DYELLOW)[FCLEAN] (RTv1)$(_WHITE)" $(NAME)
 # RE #

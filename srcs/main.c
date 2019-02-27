@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/02/26 14:00:54 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 13:21:45 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,16 @@ void	mlx_flow(t_env *env)
 
 int		main(int ac, char **av)
 {
+	t_error	id;
 	t_env	env;
 
-	(void)ac;
-	ft_memset(&env, 0, sizeof(t_env));
-	init_cam(&env.cam);
-	env.spt = SCREEN_H / MAX_THREAD;
-	read_file(&env, av[1]);
-	mlx_flow(&env);
+	if (ac == 2)
+	{
+		ft_memset(&env, 0, sizeof(t_env));
+		init_cam(&env.cam);
+		env.spt = SCREEN_H / MAX_THREAD;
+		if ((id = read_file(&env, av[1])) == ERR_NOERROR)
+			mlx_flow(&env);
+	}
 	return (0);
 }

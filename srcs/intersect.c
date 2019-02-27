@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:23:43 by wta               #+#    #+#             */
-/*   Updated: 2019/02/25 16:02:19 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 14:38:21 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ double	intersect_cylinder(t_ray *ray, t_obj *cylinder)
 	sphere.pos = c.dir;
 	sphere.color = cylinder->color;
 	sphere.radius = cylinder->radius;
-	sphere.phong = cylinder->phong;
+	sphere.specular = cylinder->specular;
 	return (intersect_sphere(&raycpy, &sphere));
 }
 

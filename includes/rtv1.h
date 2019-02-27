@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/26 19:09:59 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 14:42:38 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ typedef struct		s_obj
 	t_v3			dir;
 	t_v3			n;
 	t_v3			color;
-	t_q				phong;
+	double			specular;
 }					t_obj;
 
 typedef	struct		s_node
@@ -193,6 +193,7 @@ typedef struct		s_env
 typedef enum		e_error
 {
 	ERR_NOERROR,
+	ERR_ERRNO,
 	ERR_BADFMT,
 	ERR_MALLOC,
 	ERR_NOFILE,
@@ -201,12 +202,6 @@ typedef enum		e_error
 
 void				init_cam(t_cam *cam);
 void				compute_pos(t_cam *cam);
-
-t_obj				new_light(char type, t_v3 pos, t_v3 color, t_v3 aux);
-t_obj				new_sphere(t_v3 pos, t_v3 color, double radius, t_q phong);
-t_obj				new_plane(t_v3 pos, t_v3 n, t_v3 color, t_q phong);
-t_obj				new_cylinder(t_v3 pos, t_v3 dir, t_v3 color, t_q phong);
-t_obj				new_cone(t_v3 pos, t_v3 dir, t_v3 color, t_q phong);
 
 t_node				*newnode(t_obj obj);
 void				init_lst(t_lst *lst);
@@ -221,7 +216,8 @@ double				intersect_sphere(t_ray *ray, t_obj *sphere);
 double				intersect_plane(t_ray *ray, t_obj *plane);
 
 int					cast_shadow(t_ray *light, t_v3 *hit, t_lst *obj);
-void				compute_lights(t_env *env, t_shading *shading, t_obj *obj);
+void				compute_lights(t_env *env, t_ray *ray,
+		t_shading *shading, t_obj *obj);
 
 t_v3				add_color(t_v3 c1, t_v3 c2);
 t_v3				multf_color(t_v3 color, double coef);
@@ -248,7 +244,20 @@ int					is_number(char *str);
 int					is_float(char *str);
 void				delsplit(char **split);
 int					is_v3(char **split);
+t_v3				split_to_v3(char **split);
+t_q					split_to_v4(char **split);
+t_error				get_v3(t_obj *obj, int fd, char *str);
+t_error				get_double(t_obj *obj, int fd, char *str);
 
+t_error				get_sphere(t_env *env, int fd);
+t_error				get_plane(t_env *env, int fd);
+t_error				get_cylinder(t_env *env, int fd);
+t_error				get_cone(t_env *env, int fd);
+t_error				get_light(t_env *env, int fd);
+t_error				get_camera(t_env *env, int fd);
+
+t_error				get_v3(t_obj *obj, int fd, char *str);
+t_error				get_v3_spec(t_obj *obj, char *str, char **split, int cnt);
 void				err_handler(int err_id);
 
 #endif

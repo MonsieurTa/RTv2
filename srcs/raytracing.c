@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/02/26 17:51:45 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 13:46:06 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		cast_ray(t_env *env, t_ray *ray, t_obj *obj, int *color)
 	{
 		shading.hit = v3add(ray->pos, v3multf(ray->dir, t));
 		shading.normal = get_normal(ray, &shading.hit, obj);
-		compute_lights(env, &shading, obj);
+		compute_lights(env, ray, &shading, obj);
 		*color = v3toi(shading.color);
 		ray->tmax = t;
 		return (1);
