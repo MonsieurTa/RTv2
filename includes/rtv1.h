@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/28 13:57:37 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 18:16:05 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ typedef struct		s_shading
 	t_v3			normal;
 	t_ray			light;
 	t_v3			color;
+	double			t;
 	double			i;
 }					t_shading;
 

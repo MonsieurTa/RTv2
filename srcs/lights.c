@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:46:35 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 16:51:15 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 18:44:49 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,16 @@ void	do_shading(t_ray *ray, t_obj *obj, t_node *node, t_shading *shading)
 {
 	double	dot;
 	double	tmp;
+	double	t;
 	t_v3	vtmp;
 
+	t = v3norm(v3sub(node->obj.pos, shading->hit));
 	shading->light.dir = v3normalize(shading->light.dir);
 	dot = -v3dot(shading->normal, shading->light.dir);
 	if (dot > 0.)
 	{
 		shading->color = add_color(shading->color, multf_color(obj->color,
-					shading->i * dot / v3norm(shading->normal)
+					shading->i * dot / v3norm(shading->normal) * 1 / t
 					* v3norm(shading->light.dir)));
 		if (obj->specular > EPS)
 		{
@@ -64,8 +66,8 @@ void	do_shading(t_ray *ray, t_obj *obj, t_node *node, t_shading *shading)
 			vtmp = v3sub(v3multf(shading->normal, tmp), shading->light.dir);
 			if ((tmp = v3dot(ray->dir, vtmp)) > 0)
 				shading->color = add_color(shading->color
-						, multf_color(node->obj.color
-							, pow(tmp, obj->specular)));
+						, v3multf(multf_color(node->obj.color
+							, pow(tmp, obj->specular)), shading->i / t));
 		}
 	}
 }
