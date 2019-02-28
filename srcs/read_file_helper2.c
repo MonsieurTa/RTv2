@@ -6,11 +6,12 @@
 /*   By: wta <wta@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 12:55:24 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 14:42:26 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 14:29:34 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "../libft/includes/libft.h"
 #include "rtv1.h"
 
 t_error	get_sphere(t_env *env, int fd)
@@ -20,6 +21,7 @@ t_error	get_sphere(t_env *env, int fd)
 	t_obj	sphere;
 	t_error	err_id;
 
+	ft_bzero(&sphere, sizeof(t_obj));
 	sphere.type = SPHERE;
 	line = NULL;
 	err_id = ERR_NOERROR;
@@ -47,6 +49,7 @@ t_error	get_plane(t_env *env, int fd)
 	t_obj	plane;
 	t_error	err_id;
 
+	ft_bzero(&plane, sizeof(t_obj));
 	plane.type = PLANE;
 	line = NULL;
 	err_id = get_v3(&plane, fd, "pos=");
@@ -73,6 +76,7 @@ t_error	get_cylinder(t_env *env, int fd)
 	t_obj	cylinder;
 	t_error	err_id;
 
+	ft_bzero(&cylinder, sizeof(t_obj));
 	cylinder.type = CYLINDER;
 	line = NULL;
 	err_id = get_v3(&cylinder, fd, "pos=");
@@ -101,6 +105,7 @@ t_error	get_cone(t_env *env, int fd)
 	t_obj	cone;
 	t_error	err_id;
 
+	ft_bzero(&cone, sizeof(t_obj));
 	cone.type = CONE;
 	line = NULL;
 	err_id = get_v3(&cone, fd, "pos=");
@@ -129,8 +134,10 @@ t_error	get_light(t_env *env, int fd)
 	t_obj	light;
 	t_error	err_id;
 
+	ft_bzero(&light, sizeof(t_obj));
 	light.type = SPHERE_LIGHT;
 	line = NULL;
+	node = NULL;
 	err_id = get_v3(&light, fd, "pos=");
 	if (err_id == ERR_NOERROR)
 		err_id = get_double(&light, fd, "i=");

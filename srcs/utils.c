@@ -6,10 +6,11 @@
 /*   By: wta <wta@student.41.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 17:57:51 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 01:46:12 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 12:27:26 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <inttypes.h>
 #include "vectors.h"
 #include "rtv1.h"
 
@@ -39,9 +40,9 @@ int		clampf(double value, double max, double min)
 int		v3toi(t_v3 v)
 {
 	int		color;
-	t_uchar	*ptr;
+	uint8_t	*ptr;
 
-	ptr = (t_uchar*)&color;
+	ptr = (uint8_t*)&color;
 	ptr[0] = clamp(v.x, 255, 0);
 	ptr[1] = clamp(v.y, 255, 0);
 	ptr[2] = clamp(v.z, 255, 0);

@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/07 19:18:54 by wta               #+#    #+#             */
-/*   Updated: 2019/02/26 15:38:54 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 14:15:18 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static char		*get_str(const int fd, char *cutover, int *ret)
 {
 	char	buf[BUFF_SIZE + 1];
 
+	ft_bzero(buf, BUFF_SIZE + 1);
 	if (ft_strchr(cutover, '\n') != NULL)
 		return (cutover);
 	while ((*ret = read(fd, buf, BUFF_SIZE)) > 0)

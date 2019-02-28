@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 13:01:12 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 13:19:54 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 14:20:17 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_error	get_cam_pos(t_cam *cam, int fd, char *str)
 	len = ft_strlen(str);
 	if (ft_strnequ(line, str, len) == 0)
 		id = ERR_BADFMT;
+	split = NULL;
 	if (id == ERR_NOERROR && (cnt = split_n_count(line + len, ',', &split)) > 0)
 	{
 		if (cnt != 3 || is_v3(split) == 0)
@@ -48,6 +49,7 @@ t_error	get_cam_rot(t_cam *cam, int fd, char *str)
 	t_error	id;
 
 	id = ERR_NOERROR;
+	line = NULL;
 	if (get_next_line(fd, &line) <= 0)
 		return (ERR_BADFMT);
 	len = ft_strlen(str);
@@ -113,6 +115,8 @@ t_error	get_v3(t_obj *obj, int fd, char *str)
 	t_error	id;
 
 	id = ERR_NOERROR;
+	line = NULL;
+	split = NULL;
 	if (get_next_line(fd, &line) <= 0)
 		return (ERR_BADFMT);
 	len = ft_strlen(str);
@@ -126,6 +130,6 @@ t_error	get_v3(t_obj *obj, int fd, char *str)
 			delsplit(split);
 		}
 	}
-	free(line);
+	ft_strdel(&line);
 	return (id);
 }

@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 01:34:38 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 06:08:10 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 16:52:08 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ int			key_pressed(int key, void *param)
 	env = (t_env*)param;
 	arrow_pressed(key, env);
 	letter_pressed(key, env);
+	if (key == NUM_ZERO)
+	{
+		env->shadow ^= 0x1;
+		env->pxl = PIXEL;
+	}
 	if (key == K_PGUP)
 		env->key_pressed |= 0x400;
 	if (key == K_PGDOWN)

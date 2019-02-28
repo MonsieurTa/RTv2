@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:46:35 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 14:39:07 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/27 16:51:15 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,10 @@ void	compute_lights(t_env *env, t_ray *ray, t_shading *shading, t_obj *obj)
 		{
 			shading->light = (t_ray){node->obj.pos,
 				v3sub(shading->hit, node->obj.pos), 0, 0};
-			if (cast_shadow(&shading->light, &shading->hit, &env->objs) == 0)
+			if (env->shadow == 0 && cast_shadow(&shading->light
+						, &shading->hit, &env->objs) == 0)
+				do_shading(ray, obj, node, shading);
+			else if (env->shadow == 1)
 				do_shading(ray, obj, node, shading);
 		}
 		node = node->next;

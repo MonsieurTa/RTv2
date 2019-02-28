@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 13:46:06 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 14:56:04 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		cast_ray(t_env *env, t_ray *ray, t_obj *obj, int *color)
 	t_shading	shading;
 	double		t;
 
-	ft_memset(&shading, 0, sizeof(t_shading));
+	ft_bzero(&shading, sizeof(t_shading));
 	if ((obj->type == PLANE
 			&& (t = intersect_plane(ray, obj)) >= 0.
 				&& t < ray->tmax)
@@ -49,7 +49,7 @@ void	raycasting(t_env *env, t_ray *ray, t_v3 *pxl)
 	int		res;
 
 	node = env->objs.head;
-	ray->tmax = INFINITY;
+	ray->tmax = 2000.;
 	res = 0;
 	while ((int)pxl->x % env->pxl == 0 && node != NULL)
 	{
@@ -85,12 +85,14 @@ void	render(t_env *env)
 	init_render(env, &max_h, &inc, &pxl);
 	while ((inc.y += env->cam.view.i.y) < max_h)
 	{
-		++pxl.y;
+		if (++pxl.y >= SCREEN_H)
+			break ;
 		pxl.x = -1;
 		inc.x = 0 - env->cam.view.i.x;
 		while ((inc.x += env->cam.view.i.x) < env->cam.view.width)
 		{
-			++pxl.x;
+			if (++pxl.x >= SCREEN_W)
+				break ;
 			tmp = v3sub(v3multf(env->cam.right, inc.x),
 					v3multf(env->cam.up, inc.y));
 			tmp = v3add(env->cam.view.origin, tmp);

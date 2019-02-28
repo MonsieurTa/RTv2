@@ -6,7 +6,7 @@
 #    By: wta <wta@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/27 13:03:04 by wta               #+#    #+#              #
-#    Updated: 2019/02/27 15:11:53 by wta              ###   ########.fr        #
+#    Updated: 2019/02/28 14:37:03 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ MLXFLAG		=	-framework OpenGL -framework Appkit
 SRCS=				\
 camera.c			\
 color.c				\
+destroy_rtv1.c		\
 event.c				\
 event_pressed.c		\
 event_released.c	\

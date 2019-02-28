@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 06:11:25 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 13:27:41 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 14:30:44 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,22 @@ t_error	get_obj(t_env *env, int fd)
 			get_spec_obj(env, fd, line);
 		ft_strdel(&line);
 	}
-	free(line);
+	if (gnl_ret == -1)
+		id = ERR_GNL;
 	return (id);
+}
+
+t_error	is_valid_file(int fd)
+{
+	char	buf[6];
+	int		ret;
+
+	if ((ret = read(fd, buf, 5)) < 5)
+		return (ERR_BADFMT);
+	buf[ret] = '\0';
+	if (ft_strequ(buf, "rtv1\n") == 0)
+		return (ERR_BADFMT);
+	return (ERR_NOERROR);
 }
 
 t_error	read_file(t_env *env, char *file)
@@ -64,8 +78,10 @@ t_error	read_file(t_env *env, char *file)
 	id = ERR_NOERROR;
 	if ((fd = open(file, O_RDONLY)) == -1)
 		return (ERR_ERRNO);
+	id = is_valid_file(fd);
 	line = NULL;
-	id = get_obj(env, fd);
+	if (id == ERR_NOERROR)
+		id = get_obj(env, fd);
 	close(fd);
 	return (id);
 }

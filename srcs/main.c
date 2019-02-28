@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 15:17:04 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 14:48:37 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,17 @@ int		main(int ac, char **av)
 	id = ERR_NOERROR;
 	if (ac == 2)
 	{
-		ft_memset(&env, 0, sizeof(t_env));
+		ft_bzero(&env, sizeof(t_env));
 		init_cam(&env.cam);
 		env.spt = SCREEN_H / MAX_THREAD;
 		id = read_file(&env, av[1]);
 		if ((id = read_file(&env, av[1])) == ERR_NOERROR)
 			mlx_flow(&env);
+		lst_destroy(&env.objs);
+		lst_destroy(&env.lights);
 	}
+	else
+		write(1, "RTv1: usage: ./rtv1 file\n", 26);
 	if (id != ERR_NOERROR)
 		err_handler(id);
 	return (0);

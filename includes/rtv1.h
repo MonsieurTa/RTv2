@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 15:29:55 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 13:57:37 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # define READ_ERR		6
 # define MLX_ERR		7
 # define BAD_CMRDIR		8
-# define SCREEN_W		700
-# define SCREEN_H		700
+# define SCREEN_W		800
+# define SCREEN_H		800
 # define K_LEFT			123
 # define K_UP			126
 # define K_RIGHT		124
@@ -47,12 +47,10 @@
 # define CONE			7
 # define PIXEL			16
 # define EPS			0.001
-# define MAX_THREAD		16
+# define MAX_THREAD		8
 
 # include "quaternions.h"
 # include "vectors.h"
-
-typedef unsigned char	t_uchar;
 
 typedef struct		s_img
 {
@@ -176,6 +174,7 @@ typedef struct		s_env
 	t_lst			objs;
 	t_cam			cam;
 	t_ray			ray;
+	char			shadow;
 	int				pxl;
 	int				key_pressed;
 	int				counter;
@@ -251,5 +250,7 @@ t_error				get_camera(t_env *env, int fd);
 t_error				get_v3(t_obj *obj, int fd, char *str);
 t_error				get_v3_spec(t_obj *obj, char *str, char **split, int cnt);
 void				err_handler(t_error err_id);
+
+void				lst_destroy(t_lst *lst);
 
 #endif

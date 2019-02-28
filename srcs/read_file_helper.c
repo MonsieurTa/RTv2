@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 12:38:40 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 14:41:11 by wta              ###   ########.fr       */
+/*   Updated: 2019/02/28 14:55:19 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,24 @@ t_q		split_to_v4(char **split)
 	return (q);
 }
 
+t_error	set_double(t_obj *obj, char *line, char *str, int len)
+{
+	t_error	id;
+
+	id = ERR_NOERROR;
+	if (is_float(line + len) == 0 && is_number(line + len) == 0)
+		id = ERR_BADFMT;
+	else if (ft_strequ(str, "radius="))
+		obj->radius = fabs(ft_atof(line + len));
+	else if (ft_strequ(str, "angle="))
+		obj->angle = ft_atof(line + len) * M_PI / 180;
+	else if (ft_strequ(str, "i="))
+		obj->i = fabs(ft_atof(line + len));
+	else if (ft_strequ(str, "specular="))
+		obj->specular = fabs(ft_atof(line + len));
+	return (id);
+}
+
 t_error	get_double(t_obj *obj, int fd, char *str)
 {
 	char	*line;
@@ -44,24 +62,14 @@ t_error	get_double(t_obj *obj, int fd, char *str)
 	t_error	id;
 
 	id = ERR_NOERROR;
+	line = NULL;
 	if (get_next_line(fd, &line) <= 0)
 		return (ERR_BADFMT);
 	len = ft_strlen(str);
 	if (ft_strnequ(line, str, len) == 0)
 		id = ERR_BADFMT;
 	if (id == ERR_NOERROR)
-	{
-		if (is_float(line + len) == 0 && is_number(line + len) == 0)
-			id = ERR_BADFMT;
-		else if (ft_strequ(str, "radius="))
-			obj->radius = ft_atof(line + len);
-		else if (ft_strequ(str, "angle="))
-			obj->angle = ft_atof(line + len) * M_PI / 180;
-		else if (ft_strequ(str, "i="))
-			obj->i = ft_atof(line + len);
-		else if (ft_strequ(str, "specular="))
-			obj->specular = fabs(ft_atof(line + len));
-	}
-	free(line);
+		id = set_double(obj, line, str, len);
+	ft_strdel(&line);
 	return (id);
 }
