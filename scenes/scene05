@@ -5,10 +5,15 @@ xrot=0
 yrot=0
 zrot=0
 type=light
+ambiant
+i=0.2
+type=light
+spherical
 pos=40,-5,10
 i=10
 color=255,255,255
 type=light
+spherical
 pos=-40,-5,10
 i=10
 color=255,255,255

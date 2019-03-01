@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/02/28 18:16:05 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/01 13:54:09 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,7 @@ t_error				get_plane(t_env *env, int fd);
 t_error				get_cylinder(t_env *env, int fd);
 t_error				get_cone(t_env *env, int fd);
 t_error				get_light(t_env *env, int fd);
+t_error				get_light_type(t_obj *light, int fd);
 t_error				get_camera(t_env *env, int fd);
 
 t_error				get_v3(t_obj *obj, int fd, char *str);

@@ -6,7 +6,7 @@
 #    By: wta <wta@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/27 13:03:04 by wta               #+#    #+#              #
-#    Updated: 2019/02/28 14:37:03 by wta              ###   ########.fr        #
+#    Updated: 2019/03/01 13:54:45 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ read_file.c			\
 read_file_helper.c	\
 read_file_helper2.c	\
 read_file_helper3.c	\
+read_file_helper4.c	\
 utils.c				\
 utils_2.c			\
 utils_3.c			\

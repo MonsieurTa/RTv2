@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/27 12:55:24 by wta               #+#    #+#             */
-/*   Updated: 2019/02/28 14:29:34 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/01 14:01:49 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,18 +135,17 @@ t_error	get_light(t_env *env, int fd)
 	t_error	err_id;
 
 	ft_bzero(&light, sizeof(t_obj));
-	light.type = SPHERE_LIGHT;
 	line = NULL;
-	node = NULL;
-	err_id = get_v3(&light, fd, "pos=");
+	err_id = get_light_type(&light, fd);
+	if (err_id == ERR_NOERROR && light.type == SPHERE_LIGHT)
+		err_id = get_v3(&light, fd, "pos=");
 	if (err_id == ERR_NOERROR)
 		err_id = get_double(&light, fd, "i=");
-	if (err_id == ERR_NOERROR)
+	if (err_id == ERR_NOERROR && light.type == SPHERE_LIGHT)
 		err_id = get_v3(&light, fd, "color=");
 	if (err_id == ERR_NOERROR)
 	{
-		node = newnode(light);
-		if (node == NULL)
+		if ((node = newnode(light)) == NULL)
 			return (ERR_MALLOC);
 		pushback(&env->lights, node);
 	}
