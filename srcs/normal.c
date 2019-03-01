@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:27:57 by wta               #+#    #+#             */
-/*   Updated: 2019/02/25 16:07:14 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/01 13:34:45 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ t_v3	normal_cone(t_ray *ray, t_v3 *hit, t_obj *obj)
 	normal = v3normalize(v3cross(tmp2, tmp));
 	if (v3dot(ray->dir, normal) > 0)
 		*hit = v3add(*hit, v3multf(normal, -EPS));
+	else
+		*hit = v3add(*hit, v3multf(normal, EPS));
 	return (normal);
 }
 
