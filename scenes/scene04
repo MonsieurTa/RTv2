@@ -1,5 +1,9 @@
 rtv1
 type=light
+ambiant
+i=0.2
+type=light
+spherical
 pos=10,-10,0
 i=10
 color=255,255,255

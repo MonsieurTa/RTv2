@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 06:11:25 by wta               #+#    #+#             */
-/*   Updated: 2019/02/28 14:30:44 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/02 20:30:44 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_error	get_obj(t_env *env, int fd)
 		if (ft_strnequ(line, "type=", 5) == 0)
 			id = ERR_BADFMT;
 		if (id == ERR_NOERROR)
-			get_spec_obj(env, fd, line);
+			id = get_spec_obj(env, fd, line);
 		ft_strdel(&line);
 	}
 	if (gnl_ret == -1)

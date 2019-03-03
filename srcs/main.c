@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:26:52 by wta               #+#    #+#             */
-/*   Updated: 2019/02/28 14:48:37 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/02 22:45:10 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int		main(int ac, char **av)
 		lst_destroy(&env.lights);
 	}
 	else
-		write(1, "RTv1: usage: ./rtv1 file\n", 26);
+		write(1, "RTv1: usage: ./rtv1 file\n", 25);
 	if (id != ERR_NOERROR)
 		err_handler(id);
 	return (0);

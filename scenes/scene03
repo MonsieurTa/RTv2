@@ -1,7 +1,11 @@
 rtv1
 type=light
-pos=0,0,0
-i=1
+ambiant
+i=0.2
+type=light
+spherical
+pos=0,0,2
+i=5
 color=255,255,255
 type=cone
 pos=0,5,0

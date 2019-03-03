@@ -6,7 +6,7 @@ yrot=0
 zrot=0
 type=light
 ambiant
-i=0.2
+i=0.1
 type=light
 spherical
 pos=40,-5,10

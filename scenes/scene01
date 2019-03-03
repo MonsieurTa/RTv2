@@ -1,7 +1,8 @@
 rtv1
 type=light
-pos=10,-10,0
-i=0.4
+spherical
+pos=15,-10,0
+i=5
 color=255,255,255
 type=sphere
 pos=0,10,0
