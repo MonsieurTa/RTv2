@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rtv1.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
+/*   By: wta <wta@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/21 13:26:06 by wta               #+#    #+#             */
-/*   Updated: 2019/03/01 13:54:09 by wta              ###   ########.fr       */
+/*   Created: 2019/03/03 17:48:35 by wta               #+#    #+#             */
+/*   Updated: 2019/03/03 17:49:27 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,20 +80,6 @@ typedef struct		s_quad
 	double			det;
 }					t_quad;
 
-/*
-**	t_v3	n : normal vector
-**
-**	Phong's components :
-**		- phong.w : shininess (alpha)
-**		- phong.x : ambiant intensity
-**		- phong.y : diffuse intensity
-**		- phong.z : specular intensity
-**		- alpha	  : shininess
-**
-**	Light's components :
-**		- i       : intensity
-*/
-
 typedef struct		s_obj
 {
 	char			type;
@@ -118,14 +104,6 @@ typedef struct		s_lst
 	t_node			*head;
 	t_node			*tail;
 }					t_lst;
-
-/*
-**	View plane's components :
-**		- fov    : Field of view
-**		- width  : width of the view plane
-**		- height : height of the view plane
-**		- i      : scaled indents for x/y coordinates from screen to view plane
-*/
 
 typedef struct		s_view
 {
