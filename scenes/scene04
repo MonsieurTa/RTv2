@@ -1,6 +1,6 @@
 rtv1
 type=light
-ambiant
+ambient
 i=0.2
 type=light
 spherical

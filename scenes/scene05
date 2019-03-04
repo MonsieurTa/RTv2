@@ -5,7 +5,7 @@ xrot=0
 yrot=0
 zrot=0
 type=light
-ambiant
+ambient
 i=0.1
 type=light
 spherical

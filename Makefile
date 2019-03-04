@@ -6,7 +6,7 @@
 #    By: wta <wta@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/27 13:03:04 by wta               #+#    #+#              #
-#    Updated: 2019/03/01 13:54:45 by wta              ###   ########.fr        #
+#    Updated: 2019/03/04 14:14:56 by wta              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ $(NAME) : $(LIBFT) $(OBJ)
 	@$(MAKE) -C $(MLXDIR)
 	@$(CC) $(CFLAGS) $(MLXLIB) $(MLXFLAG) $(INC) $(OBJ) $(LIBFT) -o $@
 	@echo "$(_GREEN)[CREATED]$(_WHITE)" $@
-	@echo "All objects files are in $(_DYELLOW)/obj$(_WHITE)"
+	@echo "All objects files are in $(_DYELLOW)obj$(_WHITE)"
 # MKDIROBJ #
 $(OBJDIR) :
 	@mkdir $@
@@ -79,7 +79,7 @@ $(OBJDIR) :
 # RTv1 #
 $(addprefix $(OBJDIR)/,%.o) : $(addprefix $(SRCSDIR)/,%.c) $(addprefix $(INCDIR)/,$(HEADER)) | $(OBJDIR)
 	@$(CC) $(CFLAGS) $(INC) -o $@ -c $<
-	@echo "$(_GREEN)[OK]$(_WHITE) /$@"
+	@echo "$(_GREEN)[OK]$(_WHITE) $@"
 # LIBFT #
 $(LIBFT) :
 	@make -C $(LIBFTPATH)
@@ -94,16 +94,16 @@ clean_libft:
 # CLEAN_RTv1 #
 clean_rtv1 :
 	@rm -f $(OBJ)
-	@echo "$(_DYELLOW)[CLEAN] (RTv1)$(_WHITE)" /$(OBJDIR)/*.o
+	@echo "$(_DYELLOW)[CLEAN] (RTv1)$(_WHITE)" $(OBJDIR)/*.o
 	@rm -rf $(OBJDIR)
-	@echo "$(_DYELLOW)[CLEAN] (RTv1)$(_WHITE)" /$(OBJDIR)
+	@echo "$(_DYELLOW)[CLEAN] (RTv1)$(_WHITE)" $(OBJDIR)
 # FCLEAN LIBFT#
 fclean_libft:
 	@make -C $(LIBFTPATH) fclean
 # CLEAN #
-clean : clean_libft clean_mlx
+clean : clean_rtv1 clean_libft clean_mlx
 	@rm -f	$(NAME)
-	@echo "$(_DYELLOW)[FCLEAN] (RTv1)$(_WHITE)" /$(NAME)
+	@echo "$(_DYELLOW)[FCLEAN] (RTv1)$(_WHITE)" $(NAME)
 
 # FCLEAN #
 fclean : clean_rtv1 fclean_libft clean_mlx
