@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/02/28 18:22:39 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/05 02:51:47 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,20 @@ int		cast_ray(t_env *env, t_ray *ray, t_obj *obj, int *color)
 	return (0);
 }
 
+void	fill_blank(t_env *env, t_img *img, t_v3 *pxl, int color)
+{
+	int	start;
+	int	end;
+
+	start = (int)pxl->x + env->idx;
+	end = ((int)pxl->x + PIXEL < SCREEN_W) ? (int)pxl->x + PIXEL : SCREEN_W;
+	while (start < end)
+	{
+		pxl_to_img(img, start, (int)pxl->y, color);
+		start += 1;
+	}
+}
+
 void	raycasting(t_env *env, t_ray *ray, t_v3 *pxl)
 {
 	t_node	*node;
@@ -51,15 +65,17 @@ void	raycasting(t_env *env, t_ray *ray, t_v3 *pxl)
 	node = env->objs.head;
 	ray->tmax = 2000.;
 	res = 0;
-	while ((int)pxl->x % env->pxl == 0 && node != NULL)
+	while (node != NULL)
 	{
 		if (cast_ray(env, ray, &node->obj, &ray->color) == 1)
 			res = 1;
 		node = node->next;
 	}
-	if (res == 0 && (int)pxl->x % env->pxl == 0)
+	if (res == 0)
 		ray->color = 0x0;
 	pxl_to_img(&env->mlx.img, (int)pxl->x, (int)pxl->y, ray->color);
+	if (env->idx == 0)
+		fill_blank(env, &env->mlx.img, pxl, ray->color);
 }
 
 void	init_render(t_env *env, double *max_h, t_v3 *inc, t_v3 *pxl)
@@ -68,7 +84,6 @@ void	init_render(t_env *env, double *max_h, t_v3 *inc, t_v3 *pxl)
 
 	count = count_thread(&env->counter);
 	*max_h = (count * env->spt + env->spt) * env->cam.view.height / SCREEN_H;
-	pxl->x = -1;
 	inc->y = ((count * env->spt * env->cam.view.height) / SCREEN_H)
 		- env->cam.view.i.y;
 	pxl->y = count * env->spt - 1;
@@ -87,18 +102,19 @@ void	render(t_env *env)
 	{
 		if (++pxl.y >= SCREEN_H)
 			break ;
-		pxl.x = -1;
-		inc.x = 0 - env->cam.view.i.x;
-		while ((inc.x += env->cam.view.i.x) < env->cam.view.width)
+		pxl.x = env->idx;
+		inc.x = env->cam.view.i.x * env->idx;
+		while (inc.x < env->cam.view.width)
 		{
-			if (++pxl.x >= SCREEN_W)
-				break ;
 			tmp = v3sub(v3multf(env->cam.right, inc.x),
 					v3multf(env->cam.up, inc.y));
 			tmp = v3add(env->cam.view.origin, tmp);
 			ray.dir = v3normalize(v3sub(tmp, env->cam.pos));
 			ray.pos = env->cam.pos;
 			raycasting(env, &ray, &pxl);
+			if ((pxl.x += PIXEL) >= SCREEN_W)
+				break ;
+			inc.x += (env->cam.view.i.x * PIXEL);
 		}
 	}
 }

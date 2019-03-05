@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 17:48:35 by wta               #+#    #+#             */
-/*   Updated: 2019/03/03 17:49:27 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/05 01:59:14 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ typedef struct		s_env
 	t_ray			ray;
 	char			shadow;
 	int				pxl;
+	int				idx;
 	int				key_pressed;
 	int				counter;
 	int				spt;

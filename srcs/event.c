@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 13:42:00 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 16:51:02 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/05 02:43:33 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int			apply_key(void *param)
 	env = (t_env*)param;
 	if (env->key_pressed != 0)
 	{
-		env->pxl = PIXEL;
+		env->idx = 0;
 		move_cam(env);
 		rot_cam(env);
 		if (env->key_pressed & 0x400)
@@ -63,13 +63,13 @@ int			apply_key(void *param)
 		if (env->key_pressed & 0x800)
 			env->cam.pos = v3add(env->cam.pos, (t_v3){0., 0., -1.});
 	}
-	env->pxl = (env->pxl == 2) ? env->pxl - 1 : env->pxl - 2;
-	if (env->pxl > 0)
+	if (env->idx <= PIXEL)
 	{
 		compute_pos(&env->cam);
 		draw_all(env);
 		mlx_put_image_to_window(env->mlx.mlx_ptr, env->mlx.win_ptr,
 			env->mlx.img.img_ptr, 0, 0);
+		env->idx += 1;
 	}
 	return (0);
 }
