@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.41.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 12:52:13 by wta               #+#    #+#             */
-/*   Updated: 2019/02/26 15:06:03 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/05 03:33:56 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	set_view(t_view *view)
 {
 	double	tan_hangle;
 
-	view->fov = M_PI / 2;
+	view->fov = M_PI / 3;
 	tan_hangle = tan(view->fov / 2);
 	view->width = tan_hangle * 2;
 	view->height = SCREEN_H * (view->width / SCREEN_W);
@@ -26,7 +26,7 @@ void	set_view(t_view *view)
 	view->half_h = view->height / 2;
 	view->i.x = view->width / SCREEN_W;
 	view->i.y = view->height / SCREEN_H;
-	view->i.z = 0.;
+	view->i.z = view->i.x * PIXEL;
 }
 
 void	init_cam(t_cam *cam)

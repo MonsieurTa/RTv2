@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:46:35 by wta               #+#    #+#             */
-/*   Updated: 2019/03/04 14:07:28 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/07 02:59:05 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	do_shading(t_ray *ray, t_obj *obj, t_node *node, t_shading *shading)
 	if (dot > 0.)
 	{
 		shading->color = add_color(shading->color, multf_color(obj->color,
+					shading->i * dot / t));
+		shading->color = add_color(shading->color, multf_color(node->obj.color,
 					shading->i * dot / t));
 		if (obj->specular > EPS)
 		{

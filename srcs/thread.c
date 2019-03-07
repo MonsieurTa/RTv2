@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 02:41:55 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 06:09:27 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/05 03:28:12 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int		draw_all(t_env *env)
 	pthread_t	threads[MAX_THREAD];
 	int			index;
 
+	env->counter = 0;
 	index = -1;
 	while (++index < MAX_THREAD)
 		if ((pthread_create(&threads[index], NULL,
@@ -28,7 +29,6 @@ int		draw_all(t_env *env)
 	while (++index < MAX_THREAD)
 		if ((pthread_join(threads[index], NULL)) != 0)
 			return (0);
-	env->counter = 0;
 	return (1);
 }
 

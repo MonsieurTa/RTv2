@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:23:43 by wta               #+#    #+#             */
-/*   Updated: 2019/02/27 14:38:21 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/07 03:59:31 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ double	intersect_sphere(t_ray *ray, t_obj *sphere)
 
 double	intersect_cylinder(t_ray *ray, t_obj *cylinder)
 {
+	/*
 	t_ray	c;
 	t_ray	raycpy;
 	t_obj	sphere;
@@ -60,6 +61,20 @@ double	intersect_cylinder(t_ray *ray, t_obj *cylinder)
 	sphere.radius = cylinder->radius;
 	sphere.specular = cylinder->specular;
 	return (intersect_sphere(&raycpy, &sphere));
+	*/
+	t_quad	quad;
+	float	dotdv;
+	float	dotxv;
+	t_v3	x;
+
+	x = v3sub(ray->pos, cylinder->pos);
+	dotdv = v3dot(ray->dir, cylinder->dir);
+	dotxv = v3dot(x, cylinder->dir);
+	quad.a = v3dot(ray->dir, ray->dir) - sqr(dotdv);
+	quad.b = 2 * (v3dot(ray->dir, x) - dotdv * dotxv);
+	quad.c = v3dot(x, x) - sqr(dotxv) - sqr(cylinder->radius);
+	return (do_quad(quad));
+    
 }
 
 double	intersect_cone(t_ray *ray, t_obj *cone)

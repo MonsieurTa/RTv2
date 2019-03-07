@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/03/05 02:51:47 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/05 03:37:52 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,13 @@ void	render(t_env *env)
 	double	max_h;
 
 	init_render(env, &max_h, &inc, &pxl);
+	inc.z = env->cam.view.i.x * env->idx;
 	while ((inc.y += env->cam.view.i.y) < max_h)
 	{
-		if (++pxl.y >= SCREEN_H)
+		if ((pxl.y = (int)pxl.y + 1) >= SCREEN_H)
 			break ;
 		pxl.x = env->idx;
-		inc.x = env->cam.view.i.x * env->idx;
+		inc.x = inc.z;
 		while (inc.x < env->cam.view.width)
 		{
 			tmp = v3sub(v3multf(env->cam.right, inc.x),
@@ -112,9 +113,9 @@ void	render(t_env *env)
 			ray.dir = v3normalize(v3sub(tmp, env->cam.pos));
 			ray.pos = env->cam.pos;
 			raycasting(env, &ray, &pxl);
-			if ((pxl.x += PIXEL) >= SCREEN_W)
+			if ((pxl.x = (int)pxl.x + PIXEL) >= SCREEN_W)
 				break ;
-			inc.x += (env->cam.view.i.x * PIXEL);
+			inc.x += env->cam.view.i.z;
 		}
 	}
 }

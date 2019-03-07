@@ -6,7 +6,7 @@ type=light
 spherical
 pos=10,-10,0
 i=10
-color=255,255,255
+color=255,0,255
 type=sphere
 pos=0,10,0
 color=0,0,255
@@ -28,7 +28,7 @@ type=plane
 pos=0,0,-3
 normal=0,0,1
 color=120,120,120
-specular=0
+specular=100
 type=plane
 pos=0,20,0
 normal=0,-1,0
