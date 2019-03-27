@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:27:57 by wta               #+#    #+#             */
-/*   Updated: 2019/03/01 13:34:45 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/27 22:29:28 by williamta        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_v3	normal_plane(t_ray *ray, t_v3 *hit, t_obj *obj)
 	t_v3	normal;
 
 	normal = obj->n;
-	if (v3dot(ray->dir, obj->n) < 0)
+	if (v3dot(&ray->dir, &obj->n) < 0)
 		*hit = v3add(*hit, v3multf(obj->n, EPS));
 	else
 	{
@@ -35,7 +35,7 @@ t_v3	normal_sphere(t_ray *ray, t_v3 *hit, t_obj *obj)
 
 	tmp = v3sub(*hit, obj->pos);
 	normal = v3normalize(tmp);
-	if (v3dot(ray->dir, tmp) >= 0)
+	if (v3dot(&ray->dir, &tmp) >= 0)
 	{
 		normal = v3multf(normal, -1);
 		*hit = v3add(*hit, v3multf(normal, -EPS));
@@ -70,12 +70,12 @@ t_v3	normal_cone(t_ray *ray, t_v3 *hit, t_obj *obj)
 	t_v3	tmp2;
 
 	tmp = v3sub(*hit, obj->pos);
-	if (v3dot(tmp, obj->dir) < 0)
+	if (v3dot(&tmp, &obj->dir) < 0)
 		tmp2 = v3cross(tmp, obj->dir);
 	else
 		tmp2 = v3cross(obj->dir, tmp);
 	normal = v3normalize(v3cross(tmp2, tmp));
-	if (v3dot(ray->dir, normal) > 0)
+	if (v3dot(&ray->dir, &normal) > 0)
 		*hit = v3add(*hit, v3multf(normal, -EPS));
 	else
 		*hit = v3add(*hit, v3multf(normal, EPS));

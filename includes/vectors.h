@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 15:19:55 by wta               #+#    #+#             */
-/*   Updated: 2019/02/10 04:43:35 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/27 22:25:56 by williamta        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,6 @@ t_v3			v3project(t_v3 v, t_v3 w);
 double			v3cos(t_v3 v, t_v3 w);
 double			v3normf(t_v3 v, double scalar);
 double			v3norm(t_v3 v);
-double			v3dot(t_v3 v, t_v3 w);
+double			v3dot(t_v3 *v, t_v3 *w);
 
 #endif

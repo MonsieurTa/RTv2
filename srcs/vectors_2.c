@@ -6,16 +6,16 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/21 15:44:28 by wta               #+#    #+#             */
-/*   Updated: 2019/02/12 01:52:18 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/27 22:30:22 by williamta        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "vectors.h"
 
-double	v3dot(t_v3 v, t_v3 w)
+double	v3dot(t_v3 *v, t_v3 *w)
 {
-	return (v.x * w.x + v.y * w.y + v.z * w.z);
+	return (v->x * w->x + v->y * w->y + v->z * w->z);
 }
 
 double	v3norm(t_v3 v)
@@ -30,7 +30,7 @@ double	v3normf(t_v3 v, double scalar)
 
 double	v3cos(t_v3 v, t_v3 w)
 {
-	return (v3dot(v, w) / (v3norm(v) * v3norm(w)));
+	return (v3dot(&v, &w) / (v3norm(v) * v3norm(w)));
 }
 
 t_v3	v3normalize(t_v3 v)

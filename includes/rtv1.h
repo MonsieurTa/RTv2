@@ -6,7 +6,7 @@
 /*   By: wta <wta@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 17:48:35 by wta               #+#    #+#             */
-/*   Updated: 2019/03/05 03:50:05 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/27 22:33:59 by williamta        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 # define K_PGDOWN		121
 # define K_PLUS			69
 # define K_MINUS		78
-# define NUM_ZERO		82
+# define NUM_ZERO		29
 # define ESC			53
 # define AMBT_LIGHT		0
 # define SPHERE_LIGHT	1

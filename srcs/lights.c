@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/12 00:46:35 by wta               #+#    #+#             */
-/*   Updated: 2019/03/07 02:59:05 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/27 22:28:54 by williamta        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int		cast_shadow(t_ray *light, t_v3 *hit, t_lst *obj)
 	d = v3norm(light->dir);
 	while (node != NULL)
 	{
-		if ((node->obj.type == PLANE && v3dot(v3sub(light->pos, node->obj.pos),
-						node->obj.n) == 0)
+		t_v3	tmp = v3sub(light->pos, node->obj.pos);
+		if ((node->obj.type == PLANE && v3dot(&tmp, &node->obj.n) == 0)
 				|| (node->obj.type == SPHERE && ((t = intersect_sphere(&shadow,
 								&node->obj)) >= EPS && t < d))
 				|| (node->obj.type == PLANE && ((t = intersect_plane(&shadow,
@@ -44,6 +44,8 @@ int		cast_shadow(t_ray *light, t_v3 *hit, t_lst *obj)
 	return (0);
 }
 
+
+
 void	do_shading(t_ray *ray, t_obj *obj, t_node *node, t_shading *shading)
 {
 	double	dot;
@@ -53,18 +55,19 @@ void	do_shading(t_ray *ray, t_obj *obj, t_node *node, t_shading *shading)
 
 	t = v3norm(v3sub(node->obj.pos, shading->hit));
 	shading->light.dir = v3normalize(shading->light.dir);
-	dot = -v3dot(shading->normal, shading->light.dir);
+	dot = -v3dot(&shading->normal, &shading->light.dir);
 	if (dot > 0.)
 	{
+		tmp = shading->i * dot / t;
 		shading->color = add_color(shading->color, multf_color(obj->color,
-					shading->i * dot / t));
+					tmp));
 		shading->color = add_color(shading->color, multf_color(node->obj.color,
-					shading->i * dot / t));
+					tmp));
 		if (obj->specular > EPS)
 		{
 			tmp = -2 * dot;
 			vtmp = v3sub(v3multf(shading->normal, tmp), shading->light.dir);
-			if ((tmp = v3dot(ray->dir, vtmp)) > 0)
+			if ((tmp = v3dot(&ray->dir, &vtmp)) > 0)
 				shading->color = add_color(shading->color
 						, v3multf(multf_color(node->obj.color
 							, pow(tmp, obj->specular)), shading->i / t));
