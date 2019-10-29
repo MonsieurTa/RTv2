@@ -6,7 +6,7 @@
 /*   By: wta <marvin@42.fr>                         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/28 18:35:12 by wta               #+#    #+#             */
-/*   Updated: 2019/03/05 03:37:52 by wta              ###   ########.fr       */
+/*   Updated: 2019/03/30 13:50:44 by wta              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	fill_blank(t_env *env, t_img *img, t_v3 *pxl, int color)
 	int	end;
 
 	start = (int)pxl->x + env->idx;
-	end = ((int)pxl->x + PIXEL < SCREEN_W) ? (int)pxl->x + PIXEL : SCREEN_W;
+	end = ((int)pxl->x + PIXEL - env->idx < SCREEN_W) ? (int)pxl->x + PIXEL - env->idx : SCREEN_W;
 	while (start < end)
 	{
 		pxl_to_img(img, start, (int)pxl->y, color);
@@ -74,8 +74,7 @@ void	raycasting(t_env *env, t_ray *ray, t_v3 *pxl)
 	if (res == 0)
 		ray->color = 0x0;
 	pxl_to_img(&env->mlx.img, (int)pxl->x, (int)pxl->y, ray->color);
-	if (env->idx == 0)
-		fill_blank(env, &env->mlx.img, pxl, ray->color);
+	!env->idx ? fill_blank(env, &env->mlx.img, pxl, ray->color) : NULL;
 }
 
 void	init_render(t_env *env, double *max_h, t_v3 *inc, t_v3 *pxl)
