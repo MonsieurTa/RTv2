@@ -15,6 +15,21 @@ _WHITE		=	\033[m
 _YELLOW		=	\033[0;33m
 _DYELLOW	=	\x1b[33;01m
 # VARIABLES #
+
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S), Linux)
+	LGL := -lGL -lm
+	LGL_INC := /usr/include/GLES3
+	MLXFLAG := -lm -lpthread -lXext -lX11
+else ifeq ($(UNAME_S), Darwin)
+	LGL := -framework OpenGL -framework AppKit
+	# LGL_INC := /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/OpenGL.framework/Headers
+	LGL_INC := ~/.brew/include
+	CFLAGS += -Wno-deprecated-declarations
+	MLXFLAG := -framework OpenGL -framework Appkit
+endif
+
 MKFILEPATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 CURRDIR := $(notdir $(patsubst %/,%,$(dir $(MKFILEPATH))))
 NAME		=	rtv1
@@ -30,7 +45,6 @@ CC			=	cc
 INC			=	-I $(INCDIR) -I $(MLXDIR)
 CFLAGS		=	-Wall -Wextra -Werror -Ofast
 MLXLIB		=	-L $(MLXDIR) -lmlx
-MLXFLAG		=	#-framework OpenGL -framework Appkit
 
 SRCS=				\
 camera.c			\
@@ -70,7 +84,7 @@ all : $(NAME)
 # NAME #
 $(NAME) : $(LIBFT) $(OBJ)
 	@$(MAKE) -C $(MLXDIR)
-	@$(CC) $(CFLAGS) $(INC) $(OBJ) -lm -lpthread -lXext -lX11 $(MLXLIB) $(MLXFLAG) $(LIBFT)  -o $@
+	@$(CC) $(CFLAGS) $(INC) $(OBJ) $(MLXLIB) $(MLXFLAG) $(LIBFT)  -o $@
 	@echo "$(_GREEN)[CREATED]$(_WHITE)" $@
 	@echo "All objects files are in $(_DYELLOW)obj$(_WHITE)"
 # MKDIROBJ #
