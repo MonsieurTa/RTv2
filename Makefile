@@ -23,14 +23,15 @@ LIBFTPATH	=	libft
 LIBFTLIB	=	libft.a
 LIBFT		=	$(addprefix $(LIBFTPATH)/, $(LIBFTLIB))
 INCDIR		=	includes
-MLXDIR		= 	minilibx_macos
+MLXDIR		= minilibx
 OBJDIR		=	objs
 OBJ			=	$(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
-CC			=	gcc
+CC			=	cc
 INC			=	-I $(INCDIR) -I $(MLXDIR)
 CFLAGS		=	-Wall -Wextra -Werror -Ofast
 MLXLIB		=	-L $(MLXDIR) -lmlx
-MLXFLAG		=	-framework OpenGL -framework Appkit
+MLXFLAG		=	#-framework OpenGL -framework Appkit
+
 SRCS=				\
 camera.c			\
 color.c				\
@@ -69,7 +70,7 @@ all : $(NAME)
 # NAME #
 $(NAME) : $(LIBFT) $(OBJ)
 	@$(MAKE) -C $(MLXDIR)
-	@$(CC) $(CFLAGS) $(MLXLIB) $(MLXFLAG) $(INC) $(OBJ) $(LIBFT) -o $@
+	@$(CC) $(CFLAGS) $(INC) $(OBJ) -lm -lpthread -lXext -lX11 $(MLXLIB) $(MLXFLAG) $(LIBFT)  -o $@
 	@echo "$(_GREEN)[CREATED]$(_WHITE)" $@
 	@echo "All objects files are in $(_DYELLOW)obj$(_WHITE)"
 # MKDIROBJ #

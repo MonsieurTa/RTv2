@@ -13,6 +13,46 @@
 #ifndef RTV1_H
 # define RTV1_H
 
+# if defined(__APPLE__)
+# include <OpenGL/gl3.h>
+# define K_LEFT			123
+# define K_UP				126
+# define K_RIGHT		124
+# define K_DOWN			125
+# define K_A				0
+# define K_S				1
+# define K_D				2
+# define K_Q				12
+# define K_W				13
+# define K_E				14
+# define K_SHIFT		257
+# define K_PGUP			116
+# define K_PGDOWN		121
+# define K_PLUS			69
+# define K_MINUS		78
+# define NUM_ZERO		29
+# define ESC				53
+# else
+# include <GLES3/gl3.h>
+# define K_LEFT			0xff51
+# define K_UP				0xff52
+# define K_RIGHT		0xff53
+# define K_DOWN			0xff54
+# define K_A				0x0061
+# define K_S				0x0073
+# define K_D				0x0064
+# define K_Q				0x0071
+# define K_W				0x0077
+# define K_E				0x0065
+# define K_SHIFT		257
+# define K_PGUP			65365
+# define K_PGDOWN		65366
+# define K_PLUS			69
+# define K_MINUS		78
+# define NUM_ZERO		0x0030
+# define ESC				0xff1b
+# endif
+
 # define RD_ERR			2
 # define BAD_FMT		3
 # define MALLOC_ERR		4
@@ -22,23 +62,7 @@
 # define BAD_CMRDIR		8
 # define SCREEN_W		800
 # define SCREEN_H		800
-# define K_LEFT			123
-# define K_UP			126
-# define K_RIGHT		124
-# define K_DOWN			125
-# define K_A			0
-# define K_S			1
-# define K_D			2
-# define K_Q			12
-# define K_W			13
-# define K_E			14
-# define K_SHIFT		257
-# define K_PGUP			116
-# define K_PGDOWN		121
-# define K_PLUS			69
-# define K_MINUS		78
-# define NUM_ZERO		29
-# define ESC			53
+
 # define AMBT_LIGHT		0
 # define SPHERE_LIGHT	1
 # define SPHERE			4

@@ -27,7 +27,7 @@ INCDIR		=	includes
 OBJDIR		=	objs
 OBJLIBFT	=	$(addprefix $(OBJDIR)/,$(SRCSLIBFT:.c=.o))
 OBJPRINTF	=	$(addprefix $(OBJDIR)/,$(SRCSPRINTF:.c=.o))
-CC			=	gcc 
+CC			=	cc 
 INC			=	-I $(INCDIR)
 CFLAGS		=	-Wall -Wextra -Werror
 SRCSLIBFT		=															\

@@ -41,9 +41,9 @@ void	mlx_flow(t_env *env)
 	draw_all(env);
 	mlx_put_image_to_window(env->mlx.mlx_ptr, env->mlx.win_ptr,
 			env->mlx.img.img_ptr, 0, 0);
-	mlx_hook(env->mlx.win_ptr, 2, 0, key_pressed, env);
-	mlx_hook(env->mlx.win_ptr, 3, 0, key_released, env);
-	mlx_hook(env->mlx.win_ptr, 17, 0, close_win, NULL);
+	mlx_hook(env->mlx.win_ptr, 2, (1L<<0), key_pressed, env);
+	mlx_hook(env->mlx.win_ptr, 3, (1L<<1), key_released, env);
+	mlx_hook(env->mlx.win_ptr, 17, (1L<<0), close_win, NULL);
 	mlx_loop_hook(env->mlx.mlx_ptr, apply_key, env);
 	mlx_loop(env->mlx.mlx_ptr);
 }
